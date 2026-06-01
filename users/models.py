@@ -86,6 +86,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, blank=True)
 
+
     class Meta:
         ordering = ['-craeted_at']
     
