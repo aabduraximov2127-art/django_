@@ -22,3 +22,5 @@ class PostAdminn(admin.ModelAdmin):
     readonly_fields=('slug',)
     list_filter=('author',)
     list_per_page=15
+    
+admin.site.register(models.Tag)

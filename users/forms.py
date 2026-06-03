@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from . import models
+from django.contrib.auth import get_user_model
+from .models import Tag
+
 
 
 class UserForm(forms.ModelForm):
@@ -123,6 +126,18 @@ class ProfileUpdateForm(forms.ModelForm):
             'website',
         ]
         
+        
+class PostForm(forms.ModelForm):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+        label="Teglar"
+    )
+
+    class Meta:
+        model=models.Post
+        fields=['title', 'content', 'author', 'images', 'tags']
 class PostCreateForm(forms.ModelForm):
     title=forms.CharField(max_length=200)
     content=forms.CharField(widget=forms.Textarea)

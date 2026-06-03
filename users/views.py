@@ -8,7 +8,7 @@ from django.contrib.auth import (
 from unidecode import unidecode
 
 from . import models 
-from .forms import UserForm, RegisterForm, LoginForm, UserProfileUpdateForm, ProfileUpdateForm
+from .forms import UserForm, RegisterForm, LoginForm, UserProfileUpdateForm, ProfileUpdateForm,PostForm
 from .models import Post
 
 
@@ -199,42 +199,46 @@ def post_list(request):
 
 def post_detail(request, slug):
     post = get_object_or_404(models.Post, slug=slug)
-    return render(request, "post_detail.html", {"post": post})
+    return render(request, 'post_detail.html', {'post': post})
 
 @login_required
 def post_create(request):
     if request.method == "POST":
         form = PostCreateForm(request.POST, request.FILES)
-
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect("post_list")
-
+            form.save_m2m()
+            return redirect("post_detail", slug=post.slug)
     else:
         form = PostCreateForm()
-
     return render(request, "post_create.html", {"form": form})
 
-
+@login_required
 def post_update(request, slug): 
     post = get_object_or_404(models.Post, slug=slug)
 
     if request.method == "POST":
         form = PostUpdateForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
             return redirect("post_detail", slug=post.slug)
     else:
         form = PostUpdateForm(instance=post)
 
     return render(request, "post_update.html", {"form": form})
-
+@login_required
 def post_delete(request, slug):
     post = get_object_or_404(models.Post, slug=slug)
     if request.method == "POST":
-        post.delete()
-        return redirect("post_list")
+        form = PostDeleteForm(request.POST, instance=post)
+        if form.is_valid():
+            post.author = request.user
+            post.delete()
+            return redirect("post_list")
     return render(request, "post_delete.html", {"post": post})
 

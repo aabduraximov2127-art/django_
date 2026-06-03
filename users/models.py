@@ -77,15 +77,27 @@ def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
 
+class Tag(models.Model):
+    name=models.CharField(max_length=100, unique=True)
+    slug=models.SlugField(unique=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    def __str__(self):
+        return self.name
+
 class Post(models.Model):
     author = models.ForeignKey(ControlUsers, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=150)
+    tags=models.ManyToManyField(Tag, blank=True,related_name='posts')
     content = models.TextField()
     images=models.ImageField(upload_to="post_images/", blank=True, null=True)
     craeted_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, blank=True)
-
+    
 
     class Meta:
         ordering = ['-craeted_at']

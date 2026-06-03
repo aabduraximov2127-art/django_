@@ -207,7 +207,54 @@
     from { opacity: 0; transform: translateY(40px); filter: blur(5px); }
     to { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
+/* ===== TAGS ===== */
+.post-tags{
+    margin-top:4rem;
+    padding:2rem;
+    border-radius:24px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+}
 
+.post-tags h3{
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    margin-bottom:1.5rem;
+    font-size:1.2rem;
+    color:#fff;
+}
+
+.post-tags h3 i{
+    color:var(--primary-neon);
+}
+
+.tags-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.8rem;
+}
+
+.tag-item{
+    text-decoration:none;
+    padding:.7rem 1.2rem;
+    border-radius:999px;
+    color:#d7ddff;
+    background:rgba(0,242,254,.06);
+    border:1px solid rgba(0,242,254,.15);
+    transition:.35s;
+    font-size:.9rem;
+    font-weight:600;
+}
+
+.tag-item:hover{
+    transform:translateY(-3px);
+    color:#fff;
+    background:rgba(0,242,254,.12);
+    border-color:rgba(0,242,254,.4);
+    box-shadow:0 0 25px rgba(0,242,254,.25);
+}
   /* Responsive */
   @media(max-width: 768px) {
     .article-title { font-size: 2.5rem; margin-bottom: 2rem; }
@@ -249,6 +296,18 @@
       <img src="{{ post.images.url }}" class="post-image" id="postImg" alt="{{ post.title }}">
     </div>
   {% endif %}
+  
+{% if post.tags.all %}
+<div class="post-tags">
+    <h3><i class="fa-solid fa-tags"></i> Teglar</h3>
+
+    <div class="tags-list">
+        {% for tag in post.tags.all %}
+            <a href="{% url 'tag_detail' tag.slug %}" class="tag-item">#{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 
   <div class="article-content">
     {{ post.content|linebreaks }}
