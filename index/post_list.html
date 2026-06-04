@@ -1,87 +1,79 @@
-```html
+{% block title %}Barcha Retseptlar{% endblock %}
 
-
-{% block title %}Barcha Postlar{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% block content %}
 
 <style>
 :root{
-    --bg:#0f0f0f;
-    --card:#181818;
-    --border:#272727;
-    --text:#ffffff;
-    --muted:#aaaaaa;
-    --primary:#6366f1;
-    --secondary:#8b5cf6;
+    --bg:#0b0f1a;
+    --card:rgba(255,255,255,.06);
+    --border:rgba(255,255,255,.08);
+    --text:#fff;
+    --muted:#9ca3af;
+    --primary:#f97316;
+    --secondary:#ef4444;
+    --green:#22c55e;
 }
 
 body{
-    background:var(--bg);
+    background:
+    radial-gradient(circle at top right,#1f2937 0%,transparent 40%),
+    radial-gradient(circle at bottom left,#7c2d12 0%,transparent 40%),
+    var(--bg);
     color:var(--text);
-    font-family:system-ui,sans-serif;
+    font-family:system-ui;
 }
 
-/* Header */
+/* HEADER */
 .page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:40px;
-    padding-bottom:20px;
-    border-bottom:1px solid var(--border);
 }
 
 .page-title{
-    font-size:42px;
-    font-weight:800;
+    font-size:44px;
+    font-weight:900;
 }
 
-.post-count{
+.recipe-count{
     color:var(--muted);
-    margin-bottom:8px;
 }
 
 .create-btn{
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    color:white;
-    text-decoration:none;
     padding:14px 22px;
     border-radius:14px;
-    font-weight:600;
-    transition:.3s;
+    text-decoration:none;
+    color:#fff;
+    font-weight:700;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
 }
 
-.create-btn:hover{
-    transform:translateY(-3px);
-}
-
-/* Grid */
-.posts-grid{
+/* GRID */
+.recipes-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(420px,1fr));
-    gap:28px;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:22px;
 }
 
-/* Card */
-.post-card{
+/* CARD */
+.recipe-card{
     background:var(--card);
     border:1px solid var(--border);
     border-radius:22px;
     overflow:hidden;
+    backdrop-filter:blur(18px);
     transition:.4s;
     position:relative;
 }
 
-.post-card:hover{
-    border-color:var(--primary);
-    box-shadow:0 20px 40px rgba(99,102,241,.25);
+.recipe-card:hover{
+    transform:translateY(-10px);
 }
 
-/* Image */
+/* IMAGE */
 .image-box{
-    height:260px;
+    height:210px;
     overflow:hidden;
     position:relative;
 }
@@ -93,82 +85,89 @@ body{
     transition:.7s;
 }
 
-.post-card:hover img{
+.recipe-card:hover img{
     transform:scale(1.08);
 }
 
-.image-overlay{
+.overlay{
     position:absolute;
     inset:0;
-    background:linear-gradient(
-        to top,
-        rgba(0,0,0,.8),
-        transparent
-    );
+    background:linear-gradient(to top,rgba(0,0,0,.7),transparent);
 }
 
-.post-label{
+.badge{
     position:absolute;
-    top:15px;
-    left:15px;
-    background:rgba(0,0,0,.8);
-    color:white;
-    padding:8px 14px;
-    border-radius:50px;
-    font-size:13px;
+    top:12px;
+    left:12px;
+    background:rgba(0,0,0,.4);
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:12px;
 }
 
-/* Content */
-.card-content{
-    padding:20px;
+/* CONTENT */
+.content{
+    padding:18px;
 }
 
 .author{
     display:flex;
-    gap:12px;
     align-items:center;
-    margin-bottom:18px;
+    gap:10px;
+    margin-bottom:10px;
 }
 
 .avatar{
-    width:48px;
-    height:48px;
+    width:40px;
+    height:40px;
     border-radius:50%;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
     display:flex;
     align-items:center;
     justify-content:center;
+    font-weight:800;
+}
+
+.name{
     font-weight:700;
 }
 
-.author-name{
-    font-weight:600;
+.date{
+    font-size:12px;
+    color:var(--muted);
 }
 
-.author-date{
+.title{
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:6px;
+}
+
+.desc{
     color:var(--muted);
     font-size:14px;
+    margin-bottom:10px;
+    line-height:1.5;
 }
 
-.post-title{
-    font-size:24px;
-    font-weight:700;
+/* META INFO */
+.meta{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    font-size:12px;
     margin-bottom:12px;
-    line-height:1.4;
 }
 
-.post-text{
+.tag{
+    background:rgba(255,255,255,.06);
+    padding:6px 10px;
+    border-radius:999px;
     color:var(--muted);
-    line-height:1.8;
-    margin-bottom:20px;
 }
 
-/* Footer */
-.card-footer{
+/* FOOTER */
+.footer{
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -176,64 +175,46 @@ body{
 
 .read-btn{
     text-decoration:none;
-    color:white;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
-    padding:12px 20px;
-    border-radius:14px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    gap:10px;
+    padding:9px 14px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:#fff;
+    font-weight:700;
 }
 
 .actions{
     display:flex;
-    gap:10px;
+    gap:8px;
 }
 
-.action-btn{
-    width:42px;
-    height:42px;
-    border:none;
+.btn{
+    width:38px;
+    height:38px;
     border-radius:50%;
-    background:#222;
-    color:white;
+    border:none;
     cursor:pointer;
+    background:rgba(255,255,255,.08);
     transition:.3s;
 }
 
-.action-btn:hover{
-    background:var(--primary);
+.btn:hover{
     transform:scale(1.1);
+    background:var(--primary);
 }
 
-/* Empty */
+/* EMPTY */
 .empty{
     text-align:center;
-    padding:80px 20px;
+    padding:90px 20px;
+    color:var(--muted);
 }
 
-.empty i{
-    font-size:70px;
-    color:var(--primary);
-    margin-bottom:20px;
-}
-
-/* Mobile */
+/* RESPONSIVE */
 @media(max-width:768px){
-
     .page-header{
         flex-direction:column;
-        gap:20px;
         align-items:flex-start;
-    }
-
-    .posts-grid{
-        grid-template-columns:1fr;
+        gap:10px;
     }
 
     .page-title{
@@ -241,103 +222,77 @@ body{
     }
 }
 </style>
-{% endblock %}
-
-{% block content %}
 
 <div class="page-header">
-
     <div>
-        <div class="post-count">
-            {{ posts.count }} ta post
-        </div>
-
-        <h1 class="page-title">
-            Community Posts
-        </h1>
+        <div class="recipe-count">{{ posts.count }} ta retsept</div>
+        <h1 class="page-title">🍲 Retseptlar Kolleksiyasi</h1>
     </div>
 
     <a href="{% url 'post_create' %}" class="create-btn">
-        <i class="fa-solid fa-plus"></i>
-        Yangi Post
+        + Yangi Retsept
     </a>
-
 </div>
 
-{% if posts %}
+{% if posts.exists %}
 
-<div class="posts-grid">
+<div class="recipes-grid">
 
 {% for post in posts %}
 
-<div class="post-card">
+<div class="recipe-card">
 
     <div class="image-box">
-
-        {% if post.image %}
-            <img src="{{ post.image.url }}">
+        {% if post.images %}
+            <img src="{{ post.images.url }}">
         {% else %}
             <img src="https://picsum.photos/800/500?random={{post.id}}">
         {% endif %}
 
-        <div class="image-overlay"></div>
-
-        <div class="post-label">
-            <i class="fa-solid fa-image"></i>
-            Post
-        </div>
-
+        <div class="overlay"></div>
+        <div class="badge">🍽 Retsept</div>
     </div>
 
-    <div class="card-content">
+    <div class="content">
 
         <div class="author">
-
             <div class="avatar">
                 {{ post.author.first_name|first|upper }}
             </div>
-
             <div>
-                <div class="author-name">
+                <div class="name">
                     {{ post.author.first_name }} {{ post.author.last_name }}
                 </div>
-
-                <div class="author-date">
+                <div class="date">
                     {{ post.created_at|date:"d M Y" }}
                 </div>
             </div>
-
         </div>
 
-        <div class="post-title">
-            {{ post.title }}
+        <div class="title">{{ post.title }}</div>
+
+        <div class="desc">
+            {{ post.content|truncatechars:110 }}
         </div>
 
-        <div class="post-text">
-            {{ post.content|truncatechars:140 }}
+        <div class="meta">
+            <span class="tag">⏱ 25 min</span>
+            <span class="tag">🔥 Oson</span>
+            <span class="tag">⭐ 4.8</span>
         </div>
 
-        <div class="card-footer">
-
+        <div class="footer">
             <a href="{% url 'post_detail' post.slug %}" class="read-btn">
-                Batafsil
-                <i class="fa-solid fa-arrow-right"></i>
+                Ko‘rish →
             </a>
 
             <div class="actions">
-                <button class="action-btn">
-                    <i class="fa-regular fa-heart"></i>
-                </button>
-
-                <button class="action-btn">
-                    <i class="fa-regular fa-bookmark"></i>
-                </button>
-            </div >
-
+                <button class="btn">❤️</button>
+                <button class="btn">🔖</button>
+            </div>
         </div>
 
     </div>
-
 </div>
 
 {% endfor %}
@@ -347,45 +302,40 @@ body{
 {% else %}
 
 <div class="empty">
-    <i class="fa-regular fa-image"></i>
-    <h2>Postlar mavjud emas</h2>
+    <h2>🍽 Hozircha retsept yo‘q</h2>
+    <p>Birinchi retseptni qo‘shing</p>
 </div>
 
 {% endif %}
 
 <script>
-document.querySelectorAll(".post-card").forEach(card=>{
+document.querySelectorAll(".recipe-card").forEach(card => {
 
-card.addEventListener("mousemove",(e)=>{
+    card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect();
 
-const rect=card.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
 
-const x=e.clientX-rect.left;
-const y=e.clientY-rect.top;
+        const rotateY = ((x / r.width) - 0.5) * 8;
+        const rotateX = ((y / r.height) - 0.5) * -8;
 
-const rotateY=((x/rect.width)-0.5)*10;
-const rotateX=((y/rect.height)-0.5)*-10;
+        card.style.transform =
+        `perspective(1000px)
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        translateY(-8px)`;
+    });
 
-card.style.transform=
-`perspective(1000px)
-rotateX(${rotateX}deg)
-rotateY(${rotateY}deg)
-translateY(-8px)`;
-
-});
-
-card.addEventListener("mouseleave",()=>{
-
-card.style.transform=
-`perspective(1000px)
-rotateX(0deg)
-rotateY(0deg)
-translateY(0px)`;
-
-});
+    card.addEventListener("mouseleave", () => {
+        card.style.transform =
+        `perspective(1000px)
+        rotateX(0deg)
+        rotateY(0deg)
+        translateY(0px)`;
+    });
 
 });
 </script>
 
 {% endblock %}
-```

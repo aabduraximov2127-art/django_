@@ -1,298 +1,190 @@
-{% block title %}O'chirish: {{ post.title }}{% endblock %}
+{% block title %}Retseptni o‘chirish{% endblock %}
 
 {% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --bg-dark: #030307;
-    --danger-neon: #ff0055;
-    --danger-glow: rgba(255, 0, 85, 0.2);
-    --text-white: #ffffff;
-    --text-gray: #8e92a6;
-  }
+:root{
+    --bg:#0b0f17;
+    --card:rgba(255,255,255,.06);
+    --border:rgba(255,255,255,.08);
+    --text:#fff;
+    --muted:#9ca3af;
+    --danger:#ef4444;
+    --primary:#f97316;
+}
 
-  body {
-    background-color: var(--bg-dark);
-    font-family: 'Outfit', sans-serif;
-    color: var(--text-white);
-    overflow-x: hidden;
-    position: relative;
-  }
+body{
+    background:
+    radial-gradient(circle at top,#1f2937,transparent 45%),
+    radial-gradient(circle at bottom,#7c2d12,transparent 45%),
+    var(--bg);
+    font-family:Outfit;
+    color:var(--text);
+}
 
-  /* --- Orqa fondagi harakatlanuvchi Canvas --- */
-  #bg-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    z-index: -1;
-    pointer-events: none;
-  }
+/* CARD */
+.card{
+    max-width:520px;
+    margin:6rem auto;
+    padding:2.5rem;
+    border-radius:22px;
+    background:var(--card);
+    border:1px solid var(--border);
+    backdrop-filter:blur(18px);
+    text-align:center;
+    animation:pop .5s ease;
+}
 
-  /* --- Cyberpunk Danger Card --- */
-  .confirm-card {
-    background: rgba(15, 10, 15, 0.6);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 0, 85, 0.15);
-    border-radius: 28px;
-    padding: 3.5rem 2.5rem;
-    max-width: 550px;
-    margin: 6rem auto;
-    text-align: center;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 0, 85, 0.05);
-    position: relative;
-    overflow: hidden;
-    animation: cardSpawn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+/* ICON */
+.icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 1.5rem auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(239,68,68,.1);
+    border:1px solid rgba(239,68,68,.3);
+    font-size:2rem;
+    color:var(--danger);
+}
 
-  /* Karta tepasidagi qizil neon chiziq */
-  .confirm-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: linear-gradient(90deg, transparent, var(--danger-neon), transparent);
-  }
+/* TITLE */
+h2{
+    font-size:1.8rem;
+    margin-bottom:1rem;
+}
 
-  /* Pulsatsiya beruvchi Neon Ikonka */
-  .confirm-icon-wrap {
-    width: 90px;
-    height: 90px;
-    background: rgba(255, 0, 85, 0.05);
-    border: 1px solid rgba(255, 0, 85, 0.3);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 2rem auto;
-    box-shadow: 0 0 20px rgba(255, 0, 85, 0.1);
-    animation: iconPulse 2s infinite alternate cubic-bezier(0.455, 0.03, 0.515, 0.955);
-  }
+/* TEXT */
+p{
+    color:var(--muted);
+    line-height:1.7;
+    margin-bottom:2rem;
+}
 
-  .confirm-icon {
-    font-size: 2.5rem;
-    color: var(--danger-neon);
-    text-shadow: 0 0 15px var(--danger-neon);
-  }
+strong{
+    color:#fff;
+}
 
-  /* Sarlavha */
-  .confirm-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-    margin-bottom: 1rem;
-    background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* ACTIONS */
+.actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+}
 
-  /* Ogohlantirish matni */
-  .confirm-text {
-    color: var(--text-gray);
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 3rem;
-    padding: 0 1rem;
-  }
+.btn{
+    padding:12px 18px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+    text-decoration:none;
+}
 
-  .confirm-text strong {
-    color: var(--text-white);
-    background: rgba(255, 0, 85, 0.1);
-    border: 1px solid rgba(255, 0, 85, 0.2);
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    font-weight: 600;
-    word-break: break-all;
-  }
+/* DELETE */
+.btn-danger{
+    background:var(--danger);
+    color:#fff;
+}
 
-  /* --- Actions & Magnit Tugmalar --- */
-  .confirm-actions {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    align-items: center;
-  }
+.btn-danger:hover{
+    transform:translateY(-2px);
+    background:#dc2626;
+}
 
-  .magnet-btn-wrap {
-    display: inline-block;
-    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-  }
+/* CANCEL */
+.btn-cancel{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+}
 
-  /* O'chirish tugmasi (Haqiqiy xavfli dizayn) */
-  .btn-cyber-danger {
-    position: relative;
-    padding: 1.1rem 2.5rem;
-    background: var(--danger-neon);
-    border: none;
-    border-radius: 50px;
-    color: var(--bg-dark);
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    box-shadow: 0 0 30px rgba(255, 0, 85, 0.4);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
+.btn-cancel:hover{
+    background:rgba(255,255,255,.15);
+}
 
-  .btn-cyber-danger:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 45px rgba(255, 0, 85, 0.7);
-    color: var(--text-white);
-  }
+/* ANIMATION */
+@keyframes pop{
+    from{opacity:0;transform:scale(.9) translateY(20px);}
+    to{opacity:1;transform:scale(1) translateY(0);}
+}
 
-  /* Bekor qilish (Silliq outline) */
-  .btn-cyber-outline {
-    padding: 1rem 2.2rem;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50px;
-    color: var(--text-gray);
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.3s;
-    display: block;
-  }
-
-  .btn-cyber-outline:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: var(--text-white);
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  /* --- Keyframes Animatsiyalar --- */
-  @keyframes cardSpawn {
-    from { opacity: 0; transform: scale(0.9) translateY(30px); filter: blur(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-  }
-
-  @keyframes iconPulse {
-    0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 85, 0.1); border-color: rgba(255, 0, 85, 0.3); }
-    100% { transform: scale(1.08); box-shadow: 0 0 35px rgba(255, 0, 85, 0.3); border-color: rgba(255, 0, 85, 0.6); }
-  }
-
-  /* Responsive */
-  @media(max-width: 576px) {
-    .confirm-card { padding: 2.5rem 1.5rem; margin: 3rem 1rem; }
-    .confirm-title { font-size: 1.8rem; }
-    .confirm-actions { flex-direction: column; align-items: stretch; }
-    .btn-cyber-danger, .btn-cyber-outline { justify-content: center; }
-  }
+/* MOBILE */
+@media(max-width:600px){
+    .card{margin:3rem 1rem;}
+    .actions{flex-direction:column;}
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<canvas id="bg-canvas"></canvas>
 
-<div class="confirm-card">
-  <div class="confirm-icon-wrap">
-    <div class="confirm-icon">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-    </div>
-  </div>
-  
-  <h2 class="confirm-title">Tizim ogohlantirishi</h2>
-  
-  <p class="confirm-text">
-    <strong>«{{ post.title }}»</strong> nomli eksklyuziv postni butunlay o'chirib tashlamoqchisiz. 
-    Ushbu amalni ortga qaytarib bo'lmaydi!
-  </p>
+<div class="card">
 
-  <form method="POST">
-    {% csrf_token %}
-    <div class="confirm-actions">
-      <div class="magnet-btn-wrap">
-        <button type="submit" class="btn-cyber-danger">
-          <i class="fa-solid fa-trash-can"></i> Ha, o'chirilsin
-        </button>
-      </div>
-      <a href="{% url 'post_detail' post.slug %}" class="btn-cyber-outline">Bekor qilish</a>
-    </div>
-  </form>
+    <div class="icon">🗑️</div>
+
+    <h2>Retseptni o‘chirish</h2>
+
+    <p>
+        <strong>“{{ post.title }}”</strong> retseptini o‘chirmoqchimisiz? <br>
+        Bu amal qaytarilmaydi.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="actions">
+            <button type="submit" class="btn btn-danger">
+                Ha, o‘chirish
+            </button>
+
+            <a href="{% url 'post_detail' post.slug %}" class="btn btn-cancel">
+                Bekor qilish
+            </a>
+        </div>
+    </form>
+
 </div>
 
-<script>
-  // 1. CANVAS PARTICLE BACKGROUND (Xavfli zonaga mos qizg'ish neon zarrachalar)
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-
-  let particles = [];
-  const particleCount = 35;
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 2 + 0.5;
-      this.speedX = Math.random() * 0.4 - 0.2;
-      this.speedY = Math.random() * -0.3 - 0.05;
-      this.opacity = Math.random() * 0.3 + 0.1;
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if (this.y < 0) {
-        this.y = canvas.height;
-        this.x = Math.random() * canvas.width;
-      }
-    }
-    draw() {
-      // Bu sahifada zarrachalar qizil tusda yonadi
-      ctx.fillStyle = `rgba(255, 0, 85, ${this.opacity})`;
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = '#ff0055';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
-  }
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.shadowBlur = 0;
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    requestAnimationFrame(animateParticles);
-  }
-  animateParticles();
-
-  // 2. MAGNETIC BUTTON EFFECT
-  const magnetWrap = document.querySelector('.magnet-btn-wrap');
-  if(magnetWrap) {
-    magnetWrap.addEventListener('mousemove', (e) => {
-      const box = magnetWrap.getBoundingClientRect();
-      const cx = box.left + box.width / 2;
-      const cy = box.top + box.height / 2;
-      const mx = (e.clientX - cx) * 0.25; // Silliq harakat uchun koeffitsiyent
-      const my = (e.clientY - cy) * 0.25;
-      magnetWrap.style.transform = `translate(${mx}px, ${my}px)`;
-    });
-    
-    magnetWrap.addEventListener('mouseleave', () => {
-      magnetWrap.style.transform = 'translate(0px, 0px)';
-    });
-  }
-</script>
 {% endblock %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("deleteBtn");
+
+    let timeLeft = 3;
+
+    const interval = setInterval(() => {
+        timeLeft--;
+
+        if(timeLeft > 0){
+            btn.textContent = `${timeLeft} soniya kuting...`;
+        }
+
+        if(timeLeft <= 0){
+            clearInterval(interval);
+            btn.disabled = false;
+            btn.textContent = "Ha, o‘chirish";
+            btn.style.background = "#ef4444";
+            btn.style.cursor = "pointer";
+        }
+    }, 1000);
+
+    // 🔥 double confirm (optional safety)
+    btn.addEventListener("click", (e) => {
+        if(!confirm("Haqiqatan ham o‘chirmoqchimisiz?")) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+<script>
+document.querySelector("form").addEventListener("submit", () => {
+    const btn = document.getElementById("deleteBtn");
+    btn.innerHTML = "O‘chirilmoqda...";
+    btn.style.opacity = "0.7";
+});
+</script>

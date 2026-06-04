@@ -1,431 +1,278 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal: Cyber Users</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<title>Users Dashboard</title>
 
-    <style>
-        /* ================= RESET & CORE ================= */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Fira Code', monospace;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        body {
-            min-height: 100vh;
-            background: #050508;
-            color: #00ff66; /* Terminal yashil rang */
-            padding: 30px;
-            overflow-x: hidden;
-            position: relative;
-        }
+<style>
 
-        /* CRT Monitor chiziqlari */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 100;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
 
-        .terminal-glow {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            background: rgba(0, 255, 102, 0.02);
-            filter: blur(150px);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-        }
+body{
+    background:#f6f7fb;
+    color:#111827;
+    padding:30px;
+}
 
-        /* ================= HEADER ================= */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 255, 102, 0.2);
-        }
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
 
-        .logo-box {
-            display: flex;
-            flex-direction: column;
-        }
+.logo{
+    font-size:20px;
+    font-weight:700;
+    color:#111827;
+}
 
-        #cyberText {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #00ff66;
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
-        }
+.actions-top a{
+    text-decoration:none;
+    margin-left:10px;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+}
 
-        .system-status {
-            font-size: 11px;
-            color: rgba(0, 255, 102, 0.5);
-            margin-top: 4px;
-        }
+.create{
+    background:#4f46e5;
+    color:white;
+}
 
-        /* NAV & BUTTONS */
-        .nav {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.logout{
+    background:#e5e7eb;
+    color:#111827;
+}
 
-        .btn {
-            padding: 12px 24px;
-            border: 1px solid #00ff66;
-            background: transparent;
-            color: #00ff66;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
+/* SEARCH */
+.search input{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+    outline:none;
+    margin-bottom:25px;
+    font-size:14px;
+}
 
-        .create-btn:hover {
-            background: #00ff66;
-            color: #050508;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
-        }
+.search input:focus{
+    border-color:#4f46e5;
+    box-shadow:0 0 0 3px rgba(79,70,229,0.15);
+}
 
-        .logout-btn {
-            border-color: #ff0055;
-            color: #ff0055;
-        }
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:18px;
+}
 
-        .logout-btn:hover {
-            background: #ff0055;
-            color: #050508;
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
-        }
+/* CARD */
+.card{
+    background:white;
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.06);
+    transition:.2s;
+    cursor:pointer;
+    border:1px solid #f1f1f1;
+}
 
-        /* ================= NEW: SEARCH SYSTEM ================= */
-        .search-container {
-            margin-bottom: 40px;
-            position: relative;
-            max-width: 600px;
-        }
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.08);
+}
 
-        .search-label {
-            font-size: 11px;
-            color: rgba(0, 255, 102, 0.6);
-            margin-bottom: 8px;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+/* AVATAR */
+.avatar{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    overflow:hidden;
+    margin:auto;
+    border:3px solid #e5e7eb;
+}
 
-        .search-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 
-        .search-wrapper::before {
-            content: "guest@null:~$ search --user";
-            position: absolute;
-            left: 15px;
-            color: rgba(0, 255, 102, 0.5);
-            font-size: 14px;
-            pointer-events: none;
-        }
+/* INFO */
+.info{
+    text-align:center;
+    margin-top:12px;
+}
 
-        .cyber-search {
-            width: 100%;
-            /* Dinamik joy tashlash (Yozuv uzunligiga qarab input matni suriladi) */
-            padding: 14px 15px 14px 265px; 
-            background: #0a0a0f;
-            border: 1px solid rgba(0, 255, 102, 0.3);
-            outline: none;
-            color: #ffffff;
-            font-size: 15px;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
+.info h2{
+    font-size:15px;
+    font-weight:600;
+}
 
-        .cyber-search:focus {
-            border-color: #00ff66;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
-        }
+.info p{
+    font-size:12px;
+    color:#6b7280;
+    margin-top:3px;
+}
 
-        /* ================= GRID CONTAINER ================= */
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px;
-        }
+/* BUTTONS */
+.actions{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:15px;
+}
 
-        /* ================= TERMINAL CARD ================= */
-        .card {
-            background: #0a0a0f;
-            border: 1px solid rgba(0, 255, 102, 0.2);
-            padding: 25px 20px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+.actions a{
+    text-align:center;
+    padding:10px;
+    font-size:12px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.2s;
+}
 
-        /* Karta burchaklaridagi kiber-belgilar */
-        .card::after {
-            content: '';
-            position: absolute;
-            top: 5px; right: 5px;
-            width: 4px; height: 4px;
-            background: rgba(0, 255, 102, 0.4);
-        }
+/* MAIN POST LINK */
+.view{
+    background:#4f46e5;
+    color:white;
+}
 
-        .card:hover {
-            border-color: #00ff66;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.1);
-            transform: translateY(-5px);
-        }
+.view:hover{
+    background:#4338ca;
+}
 
-        /* ================= AVATAR (MATRIX SQUARE STYLE) ================= */
-        .avatar {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px auto;
-            border: 1px solid rgba(0, 255, 102, 0.3);
-            padding: 4px;
-            background: #050508;
-            transition: all 0.3s;
-        }
+.edit{
+    background:#f3f4f6;
+    color:#111827;
+}
 
-        .card:hover .avatar {
-            border-color: #00ff66;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
-        }
+.edit:hover{
+    background:#e5e7eb;
+}
 
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(40%) contrast(110%);
-        }
+.delete{
+    background:#fee2e2;
+    color:#b91c1c;
+}
 
-        /* ================= INFO STYLE ================= */
-        .info {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.delete:hover{
+    background:#fecaca;
+}
 
-        .info h2 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+/* EMPTY */
+.empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:40px;
+    color:#6b7280;
+}
 
-        .info p {
-            font-size: 13px;
-            color: rgba(0, 255, 102, 0.6);
-            margin-top: 6px;
-        }
-
-        /* ================= ACTIONS (TERMINAL COMMANDS) ================= */
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .actions a {
-            display: block;
-            width: 100%;
-            padding: 8px;
-            font-size: 11px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(0, 255, 102, 0.15);
-            color: rgba(0, 255, 102, 0.8);
-        }
-
-        .actions a:hover {
-            background: rgba(0, 255, 102, 0.1);
-            color: #00ff66;
-            border-color: #00ff66;
-        }
-
-        /* O'chirish buyrug'i alohida xavfli rangda */
-        .actions a.btn-delete {
-            border-color: rgba(255, 0, 85, 0.2);
-            color: rgba(255, 0, 85, 0.8);
-        }
-
-        .actions a.btn-delete:hover {
-            background: rgba(255, 0, 85, 0.1);
-            color: #ff0055;
-            border-color: #ff0055;
-        }
-
-        /* ================= STATES (EMPTY & NOT FOUND) ================= */
-        .empty, .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px;
-            background: #0a0a0f;
-            border: 1px dashed #ff0055;
-            color: #ff0055;
-            font-size: 14px;
-        }
-        
-        .no-results {
-            display: none; /* Skript orqali boshqariladi */
-        }
-
-        /* ================= RESPONSIVE ================= */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-            .search-wrapper::before {
-                content: ">";
-                left: 15px;
-            }
-            .cyber-search {
-                padding-left: 35px;
-            }
-        }
-    </style>
+</style>
 </head>
 
 <body>
 
-    <div class="terminal-glow"></div>
+<!-- HEADER -->
+<div class="header">
+    <div class="logo">Users Dashboard</div>
 
-    <!-- HEADER -->
-    <div class="header">
-        <div class="logo-box">
-            <span id="cyberText">CYBER_CORE</span>
-            <span class="system-status">STATUS: ONLINE // SECURE_NODE_OK</span>
-        </div>
+    <div class="actions-top">
+        <a href="{% url 'user_create' %}" class="create">+ Create</a>
+            <!-- 🔥 NEW: POSTGA O'TISH LINK -->
+    <a href="{% url 'post_list' %}" class="create" style="background:#22c55e;">
+        Posts Feed
+    </a>
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+    </div>
+</div>
 
-        <div class="nav">
-            <a href="{% url 'user_create' %}" class="btn create-btn">[+ INFRASTRUCTURE]</a>
+<!-- SEARCH -->
+<div class="search">
+    <input type="text" id="search" placeholder="Search users...">
+</div>
 
-            <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button class="btn logout-btn">[DISCONNECT]</button>
-            </form>
-        </div>
+<!-- GRID -->
+<div class="grid">
+
+{% for user in users %}
+
+<div class="card" data-url="{% url 'user_detail' slug=user.slug %}" data-name="{{ user.first_name|lower }} {{ user.last_name|lower }}">
+
+    <div class="avatar">
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}">
+        {% else %}
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+        {% endif %}
     </div>
 
-    <!-- NEW: LIVE TERMINAL SEARCH BAR -->
-    <div class="search-container">
-        <label class="search-label">Filter Database Records:</label>
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" class="cyber-search" placeholder="Enter identity name or node..." autocomplete="off">
-        </div>
+    <div class="info">
+        <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+        <p>{{ user.phon }}</p>
     </div>
 
-    <!-- USERS GRID -->
-    <div class="container" id="usersGrid">
+    <div class="actions">
 
-    {% for user in users %}
-    <div class="card user-card" data-url="{% url 'user_detail' slug=user.slug %}" data-name="{{ user.first_name|lower }} {{ user.last_name|lower }}">
-        
-        <div class="avatar">
-            {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" alt="Node Avatar">
-            {% else %}
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Default Node">
-            {% endif %}
-        </div>
+        <!-- 🔥 POST LINK -->
+        <a href="{% url 'user_detail' slug=user.slug %}" class="view">
+            Details
+        </a>
 
-        <div class="info">
-            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-            <p>// NET_ADDR: {{ user.phon }}</p>
-        </div>
+        <a href="{% url 'user_update' slug=user.slug %}" class="edit">
+            Edit
+        </a>
 
-        <div class="actions">
-            <a href="{% url 'profile' slug=user.slug %}" class="btn-profile">View Profile</a>
-            <a href="{% url 'user_update' slug=user.slug %}" class="btn-edit">Modify Node</a>
-            <a href="{% url 'user_delete' id=user.id %}" class="btn-delete">Terminate</a>
-        </div>
-
-    </div>
-    {% empty %}
-    <div class="empty">⚠️ CRITICAL: No active records found in database core.</div>
-    {% endfor %}
-
-    <!-- Qidiruv natijasi topilmagandagi blok -->
-    <div class="no-results" id="noResultsBlock">❌ ERROR: Identity signature not found in local node.</div>
+        <a href="{% url 'user_delete' id=user.id %}" class="delete">
+            Delete
+        </a>
 
     </div>
 
-    <!-- JS SECTION -->
-    <script>
-    /* EVENT BUBBLING FILTRI + KARTA BOSILISHI */
-    document.querySelectorAll(".user-card").forEach(card => {
-        card.addEventListener("click", (e) => {
-            if (e.target.closest('.actions')) {
-                return; 
-            }
-            window.location.href = card.dataset.url;
-        });
+</div>
+
+{% empty %}
+<div class="empty">No users found</div>
+{% endfor %}
+
+</div>
+
+<script>
+
+/* CARD CLICK */
+document.querySelectorAll(".card").forEach(card=>{
+    card.addEventListener("click",(e)=>{
+        if(e.target.tagName === "A") return;
+        window.location.href = card.dataset.url;
     });
+});
 
-    /* REAL VAQTDA ISHLAYDIGAN KIBER-QIDIRUV (LIVE SEARCH) */
-    const searchInput = document.getElementById("searchInput");
-    const userCards = document.querySelectorAll(".user-card");
-    const noResultsBlock = document.getElementById("noResultsBlock");
+/* SEARCH */
+const search = document.getElementById("search");
 
-    searchInput.addEventListener("input", (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        let visibleCount = 0;
+search.addEventListener("input",(e)=>{
+    const val = e.target.value.toLowerCase();
 
-        userCards.forEach(card => {
-            const nameAttr = card.dataset.name;
-            
-            if (nameAttr.includes(query)) {
-                card.style.display = "flex";
-                visibleCount++;
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        // Agar biror marta ham moslik chiqmasa, xatolik blokini ko'rsatish
-        if (visibleCount === 0 && userCards.length > 0) {
-            noResultsBlock.style.display = "block";
-        } else {
-            noResultsBlock.style.display = "none";
-        }
+    document.querySelectorAll(".card").forEach(card=>{
+        card.style.display = card.dataset.name.includes(val) ? "block" : "none";
     });
-    </script>
+});
+
+</script>
 
 </body>
 </html>

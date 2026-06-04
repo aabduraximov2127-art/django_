@@ -1,394 +1,336 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --bg-dark: #030307;
-    --primary-neon: #00f2fe;
-    --purple-glow: #7f00ff;
-    --danger-neon: #ff0055;
-    --warning-neon: #ffb703;
-    --text-white: #ffffff;
-    --text-gray: #a3a8c3;
-    --card-bg: rgba(10, 11, 22, 0.45);
-  }
-
-  body {
-    background-color: var(--bg-dark);
-    font-family: 'Outfit', sans-serif;
-    color: var(--text-white);
-    overflow-x: hidden;
-    position: relative;
-    line-height: 1.8;
-  }
-
-  /* --- Orqa fondagi harakatlanuvchi Canvas --- */
-  #bg-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  /* --- Maqola Konteyneri --- */
-  .article-container {
-    max-width: 850px;
-    margin: 4rem auto 8rem auto;
-    padding: 0 1.5rem;
-    animation: fadeInArticle 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* --- Navigatsiya qatori (Top Bar) --- */
-  .article-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3.5rem;
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    color: var(--text-gray);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 0.6rem 1.2rem;
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  .back-link i { transition: transform 0.3s; }
-  .back-link:hover {
-    color: var(--primary-neon);
-    border-color: rgba(0, 242, 254, 0.3);
-    background: rgba(0, 242, 254, 0.05);
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
-  }
-  .back-link:hover i { transform: translateX(-5px); }
-
-  /* Boshqaruv tugmalari (Tahrirlash / O'chirish) */
-  .control-actions {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  .btn-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-gray);
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    font-size: 0.95rem;
-  }
-
-  .btn-action.edit:hover {
-    color: var(--warning-neon);
-    border-color: rgba(255, 183, 3, 0.3);
-    background: rgba(255, 183, 3, 0.05);
-    box-shadow: 0 0 20px rgba(255, 183, 3, 0.2);
-    transform: translateY(-2px);
-  }
-
-  .btn-action.delete:hover {
-    color: var(--danger-neon);
-    border-color: rgba(255, 0, 85, 0.3);
-    background: rgba(255, 0, 85, 0.05);
-    box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
-    transform: translateY(-2px);
-  }
-
-  /* --- Meta Ma'lumotlar --- */
-  .article-meta {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--primary-neon);
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-  }
-
-  .article-meta span {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .article-meta .author-badge {
-    color: var(--text-white);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.2rem 0.8rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  /* --- Maqola Sarlavhasi (Epic Display) --- */
-  .article-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 3.8rem;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 3rem;
-    background: linear-gradient(135deg, #ffffff 40%, #c7cbdf 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* --- 3D Parallax Rasm Effekti --- */
-  .image-wrapper {
-    position: relative;
-    width: 100%;
-    border-radius: 24px;
-    overflow: hidden;
-    margin-bottom: 4rem;
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
-    perspective: 1000px;
-  }
-
-  .post-image {
-    width: 100%;
-    height: auto;
-    max-height: 500px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.1s ease-out;
-    transform-origin: center center;
-  }
-
-  /* --- Premium Matn Kontenti --- */
-  .article-content {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: var(--text-gray);
-    text-align: justify;
-  }
-
-  /* Maqolaning birinchi harfini chiroyli qilish (Drop Cap) */
-  .article-content p:first-of-type::first-letter {
-    font-family: 'Playfair Display', serif;
-    font-size: 4.5rem;
-    font-weight: 700;
-    float: left;
-    line-height: 0.8;
-    margin-right: 0.75rem;
-    margin-top: 0.5rem;
-    color: var(--primary-neon);
-    text-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-  }
-
-  .article-content p {
-    margin-bottom: 2rem;
-  }
-
-  /* --- Animatsiya --- */
-  @keyframes fadeInArticle {
-    from { opacity: 0; transform: translateY(40px); filter: blur(5px); }
-    to { opacity: 1; transform: translateY(0); filter: blur(0); }
-  }
-/* ===== TAGS ===== */
-.post-tags{
-    margin-top:4rem;
-    padding:2rem;
-    border-radius:24px;
-    background:rgba(255,255,255,.03);
-    border:1px solid rgba(255,255,255,.08);
-    backdrop-filter:blur(20px);
+:root{
+    --bg:#070a12;
+    --card:rgba(255,255,255,.05);
+    --border:rgba(255,255,255,.08);
+    --text:#fff;
+    --muted:#9ca3af;
+    --primary:#f97316;
+    --green:#22c55e;
+    --red:#ef4444;
 }
 
-.post-tags h3{
+body{
+    background: radial-gradient(circle at top,#1f2937,transparent 40%),
+                radial-gradient(circle at bottom,#7c2d12,transparent 40%),
+                var(--bg);
+    color:var(--text);
+    font-family:Outfit;
+}
+
+/* CONTAINER */
+.recipe-container{
+    max-width:900px;
+    margin:3rem auto;
+    padding:0 1rem;
+}
+
+/* TOPBAR */
+.topbar{
     display:flex;
+    justify-content:space-between;
     align-items:center;
-    gap:.7rem;
-    margin-bottom:1.5rem;
-    font-size:1.2rem;
+    margin-bottom:2rem;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.back{
+    text-decoration:none;
+    color:var(--muted);
+    font-weight:600;
+    transition:.3s;
+}
+.back:hover{ color:var(--primary); }
+
+/* SMALL BUTTONS */
+.btn-small{
+    padding:8px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
     color:#fff;
+    transition:.3s;
 }
 
-.post-tags h3 i{
-    color:var(--primary-neon);
+.btn-small:hover{
+    transform:translateY(-2px);
 }
 
-.tags-list{
+.btn-small.edit:hover{
+    background:rgba(249,115,22,.2);
+    border-color:#f97316;
+}
+
+.btn-small.delete:hover{
+    background:rgba(239,68,68,.2);
+    border-color:#ef4444;
+}
+
+/* TITLE */
+.title{
+    font-size:3rem;
+    font-weight:800;
+    margin:1rem 0;
+    font-family:"Playfair Display";
+}
+
+/* META */
+.meta{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:1.5rem;
+}
+
+.badge{
+    padding:6px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--border);
+    font-size:13px;
+    color:var(--muted);
+}
+
+/* IMAGE */
+.image-box{
+    border-radius:22px;
+    overflow:hidden;
+    margin-bottom:2rem;
+    border:1px solid var(--border);
+    cursor:zoom-in;
+}
+
+.image-box img{
+    width:100%;
+    height:420px;
+    object-fit:cover;
+    transition:.4s;
+}
+
+/* INFO GRID */
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:2rem;
+}
+
+.info-card{
+    background:var(--card);
+    padding:15px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+/* INGREDIENTS */
+.section{ margin-top:2rem; }
+
+.section h2{
+    margin-bottom:1rem;
+    font-size:1.4rem;
+}
+
+.ingredients{
     display:flex;
     flex-wrap:wrap;
-    gap:.8rem;
+    gap:10px;
 }
 
-.tag-item{
-    text-decoration:none;
-    padding:.7rem 1.2rem;
+.ing{
+    padding:8px 12px;
     border-radius:999px;
-    color:#d7ddff;
-    background:rgba(0,242,254,.06);
-    border:1px solid rgba(0,242,254,.15);
-    transition:.35s;
-    font-size:.9rem;
-    font-weight:600;
+    background:rgba(249,115,22,.1);
+    border:1px solid rgba(249,115,22,.3);
+    color:#ffd6b0;
 }
 
-.tag-item:hover{
-    transform:translateY(-3px);
-    color:#fff;
-    background:rgba(0,242,254,.12);
-    border-color:rgba(0,242,254,.4);
-    box-shadow:0 0 25px rgba(0,242,254,.25);
+/* STEPS */
+.steps{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
 }
-  /* Responsive */
-  @media(max-width: 768px) {
-    .article-title { font-size: 2.5rem; margin-bottom: 2rem; }
-    .article-container { margin: 2rem auto 4rem auto; }
-    .article-meta { flex-wrap: wrap; gap: 1rem; }
-  }
+
+.step{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:15px;
+    border-radius:16px;
+    transition:.3s;
+}
+
+.step:hover{
+    transform:translateX(6px);
+    border-color:var(--primary);
+}
+
+/* ACTIONS */
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:2rem;
+    flex-wrap:wrap;
+}
+
+.btn{
+    padding:10px 14px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:var(--primary);
+    transform:translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .title{font-size:2rem;}
+    .info-grid{grid-template-columns:1fr;}
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<canvas id="bg-canvas"></canvas>
 
-<article class="article-container">
-  
-  <div class="article-nav">
-    <a href="{% url 'post_list' %}" class="back-link">
-      <i class="fa-solid fa-arrow-left-long"></i> Ro'yxatga qaytish
-    </a>
-    
-    <div class="control-actions">
-      <a href="{% url 'post_update' post.slug %}" class="btn-action edit" title="Tahrirlash">
-        <i class="fa-solid fa-pen-nib"></i>
-      </a>
-      <a href="{% url 'post_delete' post.slug %}" class="btn-action delete" title="O'chirish">
-        <i class="fa-solid fa-trash-can"></i>
-      </a>
+<div class="recipe-container">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+
+        <a href="{% url 'post_list' %}" class="back">← Ro‘yxat</a>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a href="{% url 'post_update' post.slug %}" class="btn-small edit">✏️ Update</a>
+            <a href="{% url 'post_delete' post.slug %}" class="btn-small delete">🗑 Delete</a>
+        </div>
+
     </div>
-  </div>
 
-  <div class="article-meta">
-    <span class="author-badge"><i class="fa-solid fa-signature"></i> {{ post.author }}</span>
-    <span><i class="fa-regular fa-calendar-check"></i> {{ post.created_at|date:"d M, Y" }}</span>
-  </div>
+    <!-- TITLE -->
+    <h1 class="title">{{ post.title }}</h1>
 
-  <h1 class="article-title">{{ post.title }}</h1>
-
-  {% if post.images %}
-    <div class="image-wrapper" id="imgWrapper">
-      <img src="{{ post.images.url }}" class="post-image" id="postImg" alt="{{ post.title }}">
+    <!-- META -->
+    <div class="meta">
+        <div class="badge">👨‍🍳 {{ post.author }}</div>
+        <div class="badge">📅 {{ post.created_at|date:"d M Y" }}</div>
+        <div class="badge">⭐ 4.8</div>
+        <div class="badge">🔥 Oson</div>
     </div>
-  {% endif %}
-  
-{% if post.tags.all %}
-<div class="post-tags">
-    <h3><i class="fa-solid fa-tags"></i> Teglar</h3>
 
-    <div class="tags-list">
-        {% for tag in post.tags.all %}
-            <a href="{% url 'tag_detail' tag.slug %}" class="tag-item">#{{ tag.name }}</a>
-        {% endfor %}
+    <!-- IMAGE -->
+    {% if post.images %}
+    <div class="image-box">
+        <img src="{{ post.images.url }}">
     </div>
+    {% endif %}
+
+    <!-- INFO -->
+    <div class="info-grid">
+        <div class="info-card">⏱ 30 min</div>
+        <div class="info-card">🔥 Oson</div>
+        <div class="info-card">🍽 2-3 kishi</div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="section">
+        <h2>📖 Tavsif</h2>
+        <p style="color:var(--muted)">
+            {{ post.content|linebreaks }}
+        </p>
+    </div>
+
+    <!-- INGREDIENTS -->
+    <div class="section">
+        <h2>🥕 Ingredientlar</h2>
+
+        <div class="ingredients">
+            {% for item in post.ritsep.splitlines %}
+                {% if item %}
+                    <div class="ing">{{ item }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- STEPS -->
+    <div class="section">
+        <h2>👨‍🍳 Tayyorlash bosqichlari</h2>
+
+        <div class="steps">
+            <div class="step">1. Ingredientlarni tayyorlang</div>
+            <div class="step">2. Aralashtiring</div>
+            <div class="step">3. Pishiring</div>
+            <div class="step">4. Tayyor!</div>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+        <button class="btn" id="likeBtn">❤️ Like</button>
+        <button class="btn" id="saveBtn">🔖 Save</button>
+        <button class="btn" id="shareBtn">📤 Share</button>
+    </div>
+
 </div>
-{% endif %}
-
-  <div class="article-content">
-    {{ post.content|linebreaks }}
-  </div>
-
-</article>
 
 <script>
-  // 1. CANVAS PARTICLE BACKGROUND (Moviy kosmik zarrachalar)
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
+// STEP ANIMATION
+document.querySelectorAll(".step").forEach((s,i)=>{
+    s.style.opacity="0";
+    s.style.transform="translateY(10px)";
 
-  let particles = [];
-  const particleCount = 45;
+    setTimeout(()=>{
+        s.style.transition=".4s";
+        s.style.opacity="1";
+        s.style.transform="translateY(0)";
+    }, i*120);
+});
 
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+// LIKE BUTTON
+const likeBtn = document.getElementById("likeBtn");
+likeBtn.addEventListener("click", ()=>{
+    likeBtn.innerHTML = "❤️ Liked";
+    likeBtn.style.background = "#ef4444";
+});
 
-  class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 1.5 + 0.5;
-      this.speedX = Math.random() * 0.3 - 0.15;
-      this.speedY = Math.random() * -0.3 - 0.05;
-      this.opacity = Math.random() * 0.4 + 0.1;
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if (this.y < 0) {
-        this.y = canvas.height;
-        this.x = Math.random() * canvas.width;
-      }
-    }
-    draw() {
-      ctx.fillStyle = `rgba(0, 242, 254, ${this.opacity})`;
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = '#00f2fe';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
+// SHARE BUTTON
+const shareBtn = document.getElementById("shareBtn");
+shareBtn.addEventListener("click", async ()=>{
+    await navigator.clipboard.writeText(window.location.href);
+    shareBtn.innerHTML = "🔗 Copied!";
+    shareBtn.style.background = "#22c55e";
 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
-  }
+    setTimeout(()=>{
+        shareBtn.innerHTML = "📤 Share";
+        shareBtn.style.background = "";
+    },2000);
+});
 
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.shadowBlur = 0;
-    particles.forEach(p => {
-      p.update();
-      p.draw();
+// IMAGE ZOOM
+const img = document.querySelector(".image-box img");
+if(img){
+    img.addEventListener("click", ()=>{
+        img.style.transform =
+            img.style.transform === "scale(1.5)"
+            ? "scale(1)"
+            : "scale(1.5)";
     });
-    requestAnimationFrame(animateParticles);
-  }
-  animateParticles();
-
-  // 2. IMAGE 3D PARALLAX EFFECT (Rasm ustida sichqoncha yurganda chuqurlik effekti)
-  const imgWrapper = document.getElementById('imgWrapper');
-  const postImg = document.getElementById('postImg');
-
-  if (imgWrapper && postImg) {
-    imgWrapper.addEventListener('mousemove', (e) => {
-      const box = imgWrapper.getBoundingClientRect();
-      const x = e.clientX - box.left - (box.width / 2);
-      const y = e.clientY - box.top - (box.height / 2);
-      
-      // Kuchli bo'lmagan, o'ta silliq 3D og'ish
-      postImg.style.transform = `scale(1.08) rotateX(${-y / 25}deg) rotateY(${x / 25}deg)`;
-    });
-
-    imgWrapper.addEventListener('mouseleave', () => {
-      postImg.style.transform = 'scale(1) rotateX(0deg) rotateY(0deg)';
-    });
-  }
+}
 </script>
+
 {% endblock %}

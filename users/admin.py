@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(models.UserProfile)
 
-admin.site.register(models.Post)
+admin.site.register(models.Ritsep)
 class PostAdminn(admin.ModelAdmin):
     list_display=('title','author','craeted_at')
     list_display_links=('title',)
@@ -23,4 +23,3 @@ class PostAdminn(admin.ModelAdmin):
     list_filter=('author',)
     list_per_page=15
     
-admin.site.register(models.Tag)

@@ -133,6 +133,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL='login'
 LOGIN_REDIRECT_URL='post_create'
-LOGIN_REDIRECT_URL='login'
+LOGIN_REDIRECT_URL='login'    
 
 # create function calkulyatot

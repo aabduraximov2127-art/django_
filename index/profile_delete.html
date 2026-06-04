@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Danger Zone</title>
+<title>System Security Warning</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 
@@ -21,116 +21,160 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:#020208;
+    background:#05060a;
     font-family:'Rajdhani',sans-serif;
     overflow:hidden;
 }
 
-/* GLOW */
+/* BACKGROUND GRID */
+body::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(rgba(255,0,85,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,0,85,0.05) 1px, transparent 1px);
+    background-size:40px 40px;
+    opacity:.3;
+}
+
+/* GLOW ORBS */
 .glow{
     position:absolute;
-    width:600px;
-    height:600px;
-    filter:blur(180px);
+    width:500px;
+    height:500px;
+    filter:blur(160px);
     opacity:.25;
+    z-index:0;
 }
 
-.red{background:#ff0055; top:-200px; left:-200px;}
-.blue{background:#00d2ff; bottom:-200px; right:-200px;}
+.red{background:#ff003c; top:-200px; left:-200px;}
+.purple{background:#7c3aed; bottom:-200px; right:-200px;}
 
+/* MAIN CARD */
 .card{
-    width:460px;
-    padding:40px;
-    border-radius:26px;
-    background:rgba(10,10,20,.78);
-    border:1px solid rgba(255,255,255,.08);
-    text-align:center;
+    width:520px;
+    padding:35px;
+    border-radius:18px;
+    background:rgba(10,12,20,0.85);
+    border:1px solid rgba(255,0,60,0.2);
+    box-shadow:0 0 40px rgba(255,0,60,0.15);
     z-index:10;
-    box-shadow:0 20px 60px rgba(0,0,0,.7);
-    animation:show .6s ease;
+    position:relative;
+    animation:boot 0.8s ease;
 }
 
-@keyframes show{
-    from{opacity:0; transform:translateY(30px) scale(.9);}
-    to{opacity:1; transform:translateY(0) scale(1);}
+/* BOOT ANIMATION */
+@keyframes boot{
+    from{transform:scale(.8); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .icon{
-    font-size:55px;
-    color:#ff0055;
-    animation:pulse 1.6s infinite;
+    font-size:32px;
+    color:#ff003c;
+    animation:blink 1s infinite;
 }
 
-@keyframes pulse{
-    50%{transform:scale(1.15);}
+@keyframes blink{
+    50%{opacity:.3;}
 }
 
-h1{
-    font-family:'Orbitron',sans-serif;
-    color:white;
-    margin-top:10px;
+.title{
+    font-family:'Orbitron';
+    color:#fff;
+    font-size:18px;
     letter-spacing:2px;
 }
 
-p{
+.subtitle{
     color:#94a3b8;
-    margin:15px 0 25px;
+    font-size:13px;
+    margin-top:3px;
+}
+
+/* TERMINAL BOX */
+.terminal{
+    margin-top:20px;
+    padding:15px;
+    border-radius:12px;
+    background:#0a0f1a;
+    border:1px solid rgba(255,0,60,0.15);
+    font-size:13px;
+    color:#22c55e;
+    height:120px;
+    overflow:hidden;
+    font-family:monospace;
 }
 
 /* BUTTONS */
-.btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:14px;
-    cursor:pointer;
-    font-family:'Orbitron',sans-serif;
-    font-weight:700;
-    margin-top:10px;
-    transition:.3s;
+.actions{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
 }
 
-.delete{
-    background:linear-gradient(135deg,#ff0055,#990033);
+.btn{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-family:'Orbitron';
+    font-weight:700;
+    transition:.2s;
+}
+
+.danger{
+    background:linear-gradient(135deg,#ff003c,#7f001f);
     color:white;
 }
 
-.delete:hover{
+.danger:hover{
     transform:translateY(-3px);
-    box-shadow:0 10px 30px rgba(255,0,85,.3);
+    box-shadow:0 10px 25px rgba(255,0,60,0.3);
 }
 
-.cancel{
+.safe{
     background:#111827;
     color:#cbd5e1;
 }
 
-.cancel:hover{
+.safe:hover{
     background:#1f2937;
+}
+
+/* OVERLAY */
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+
+.overlay.active{
+    display:flex;
 }
 
 /* MODAL */
 .modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    display:none;
-    justify-content:center;
-    align-items:center;
-}
-
-.modal.active{
-    display:flex;
-}
-
-.modal-box{
-    width:400px;
-    background:#0f172a;
-    padding:30px;
-    border-radius:18px;
-    border:1px solid #ff0055;
+    width:420px;
+    padding:25px;
+    border-radius:16px;
+    background:#0b0f1c;
+    border:1px solid #ff003c;
     text-align:center;
-    animation:pop .25s ease;
+    animation:pop .2s ease;
 }
 
 @keyframes pop{
@@ -138,22 +182,22 @@ p{
     to{transform:scale(1); opacity:1;}
 }
 
-.modal-box h2{
-    color:#ff0055;
+.modal h2{
+    color:#ff003c;
     font-family:'Orbitron';
 }
 
-.modal-box p{
-    color:#cbd5e1;
-    margin:10px 0 15px;
+.modal p{
+    color:#94a3b8;
+    margin:10px 0;
 }
 
 input{
     width:100%;
     padding:12px;
     border-radius:10px;
-    border:1px solid #334155;
-    background:#0b1220;
+    background:#050814;
+    border:1px solid #1f2937;
     color:white;
     text-align:center;
     letter-spacing:2px;
@@ -161,27 +205,27 @@ input{
 }
 
 input:focus{
-    border-color:#ff0055;
+    border-color:#ff003c;
 }
 
-.actions{
+.modal-actions{
     display:flex;
     gap:10px;
     margin-top:15px;
 }
 
-.ok{
-    background:#ff0055;
+.confirm{
+    background:#ff003c;
     color:white;
 }
 
-.no{
+.cancel{
     background:#1f2937;
     color:#cbd5e1;
 }
 
 .shake{
-    animation:shake .4s;
+    animation:shake .3s;
 }
 
 @keyframes shake{
@@ -197,49 +241,56 @@ input:focus{
 <body>
 
 <div class="glow red"></div>
-<div class="glow blue"></div>
+<div class="glow purple"></div>
 
 <div class="card">
 
-    <div class="icon">⚠</div>
-    <h1>DANGER ZONE</h1>
-    <p>This action is irreversible. Be careful.</p>
+    <div class="header">
+        <div class="icon">⚠</div>
+        <div>
+            <div class="title">SYSTEM DANGER ZONE</div>
+            <div class="subtitle">Irreversible action detected</div>
+        </div>
+    </div>
 
-    <form method="POST" id="deleteForm">
-        {% csrf_token %}
+    <div class="terminal" id="terminal">
+> scanning user permissions...
+> verifying admin access...
+> WARNING: destructive action enabled
+> status: CRITICAL
+    </div>
 
-        <button type="button" class="btn delete" onclick="openModal()">
-            DELETE PROFILE
+    <div class="actions">
+
+        <button class="btn danger" onclick="openModal()">
+            INIT DELETE
         </button>
 
-        <a href="{% url 'user_list' %}">
-            <button type="button" class="btn cancel">
-                CANCEL
-            </button>
+        <a href="{% url 'user_list' %}" class="btn safe" style="text-decoration:none; display:flex; justify-content:center; align-items:center;">
+            ABORT
         </a>
 
-    </form>
+    </div>
 
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
+<!-- OVERLAY -->
+<div class="overlay" id="overlay">
 
-    <div class="modal-box" id="box">
+    <div class="modal" id="modal">
 
-        <h2>FINAL CONFIRMATION</h2>
+        <h2>FINAL SECURITY CHECK</h2>
+        <p>Type <b>DELETE</b> to continue</p>
 
-        <p>Type <b>DELETE</b> to confirm</p>
+        <input id="input" type="text">
 
-        <input type="text" id="input">
+        <div class="modal-actions">
 
-        <div class="actions">
-
-            <button class="btn ok" onclick="confirmDelete()">
+            <button class="btn confirm" onclick="confirmDelete()">
                 CONFIRM
             </button>
 
-            <button class="btn no" onclick="closeModal()">
+            <button class="btn cancel" onclick="closeModal()">
                 CANCEL
             </button>
 
@@ -249,39 +300,50 @@ input:focus{
 
 </div>
 
+<form method="POST" id="deleteForm">
+    {% csrf_token %}
+</form>
+
 <script>
 
 function openModal(){
-    document.getElementById("modal").classList.add("active");
-    document.getElementById("input").value = "";
+    document.getElementById("overlay").classList.add("active");
+    document.getElementById("input").value="";
     document.getElementById("input").focus();
 }
 
 function closeModal(){
-    document.getElementById("modal").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
 }
 
 function confirmDelete(){
 
     let val = document.getElementById("input").value;
-    let box = document.getElementById("box");
+    let modal = document.getElementById("modal");
 
     if(val === "DELETE"){
         document.getElementById("deleteForm").submit();
     }else{
-        box.classList.add("shake");
-        document.getElementById("input").value = "";
-        document.getElementById("input").placeholder = "WRONG WORD!";
-        setTimeout(()=>box.classList.remove("shake"),400);
+        modal.classList.add("shake");
+        setTimeout(()=>modal.classList.remove("shake"),300);
     }
 }
 
-/* ESC CLOSE */
-document.addEventListener("keydown",(e)=>{
-    if(e.key === "Escape"){
-        closeModal();
+/* fake terminal animation */
+const terminal = document.getElementById("terminal");
+let lines = [
+"> decrypting request...",
+"> checking integrity...",
+"> system ready..."
+];
+
+let i = 0;
+setInterval(()=>{
+    if(i < lines.length){
+        terminal.innerHTML += "\n" + lines[i];
+        i++;
     }
-});
+}, 1200);
 
 </script>
 

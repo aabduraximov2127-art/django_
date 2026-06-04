@@ -1,293 +1,193 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal: Update Profile</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        /* ================= RESET & CORE ================= */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Fira Code', monospace; /* Dasturchilar shrifti */
-        }
+<title>Update Profile</title>
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #050508;
-            color: #00ff66; /* Klassik xakerlar yashil rangi */
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        /* CRT monitor chiziqlari effekti (Eski terminallar kabi) */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 100;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
-        }
+<style>
 
-        /* Matrix uslubidagi ohista fon nuri */
-        .terminal-glow {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: rgba(0, 255, 102, 0.03);
-            filter: blur(120px);
-            border-radius: 50%;
-            pointer-events: none;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', sans-serif;
+}
 
-        /* ================= TERMINAL OYNASI ================= */
-        .terminal-window {
-            width: 500px;
-            background: #0a0a0f;
-            border: 1px solid #00ff66;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0, 255, 102, 0.15);
-            overflow: hidden;
-            animation: bootUp 0.4s ease-out;
-        }
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: radial-gradient(circle at top, #1e293b, #0b1220);
+    color:#e5e7eb;
+}
 
-        @keyframes bootUp {
-            from { opacity: 0; transform: scale(0.96) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+/* BACK CARD */
+.wrapper{
+    width:520px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:22px;
+    backdrop-filter:blur(18px);
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    overflow:hidden;
+}
 
-        /* Terminal yuqori paneli */
-        .terminal-header {
-            background: #11111a;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 255, 10 green, 0.2);
-            border-bottom: 1px solid #00ff6633;
-        }
+/* HEADER */
+.header{
+    padding:25px;
+    background:linear-gradient(135deg,#6366f1,#22c55e);
+    color:white;
+}
 
-        .terminal-buttons {
-            display: flex;
-            gap: 8px;
-        }
+.header h1{
+    font-size:20px;
+    font-weight:600;
+}
 
-        /* Uchta rangli nuqtachalar */
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #222;
-        }
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
+.header p{
+    font-size:12px;
+    opacity:.8;
+    margin-top:5px;
+}
 
-        .terminal-title {
-            font-size: 11px;
-            color: rgba(0, 255, 102, 0.6);
-            letter-spacing: 1px;
-        }
+/* FORM */
+.form{
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
 
-        /* Terminal ichki qismi */
-        .terminal-body {
-            padding: 30px;
-        }
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
 
-        /* Matn yozilish effekti uchun */
-        .typing-text {
-            font-size: 14px;
-            margin-bottom: 25px;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 2px solid #00ff66;
-            width: 100%;
-            animation: typing 2s steps(30, end), blink 0.75s step-end infinite;
-        }
+label{
+    font-size:12px;
+    color:#94a3b8;
+    letter-spacing:.5px;
+}
 
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        @keyframes blink {
-            from, to { border-color: transparent }
-            50% { border-color: #00ff66; }
-        }
+input, textarea{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(15,23,42,0.6);
+    color:white;
+    outline:none;
+    transition:.2s;
+}
 
-        /* ================= INPUTLAR (MINIMAL TERMINAL STYLE) ================= */
-        .input-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
+input:focus, textarea:focus{
+    border-color:#6366f1;
+    box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+}
 
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: rgba(0, 255, 102, 0.7);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
+textarea{
+    resize:none;
+    height:90px;
+}
 
-        /* Prefiks belgisi ( > ) */
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+/* BUTTONS */
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
 
-        .input-wrapper::before {
-            content: ">";
-            position: absolute;
-            left: 0;
-            color: #00ff66;
-            font-size: 16px;
-        }
+.btn{
+    flex:1;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+}
 
-        /* Django formasi elementlari uchun maxsus terminal stil */
-        .input-wrapper input,
-        .input-wrapper textarea {
-            width: 100%;
-            padding: 10px 10px 10px 20px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(0, 255, 102, 0.3);
-            outline: none;
-            color: #ffffff;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
+.save{
+    background:linear-gradient(135deg,#6366f1,#22c55e);
+    color:white;
+}
 
-        .input-wrapper textarea {
-            resize: none;
-            height: 80px;
-            border-bottom: 1px solid rgba(0, 255, 102, 0.3);
-        }
+.save:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.1);
+}
 
-        /* Fokus bo'lganda tagidagi chiziq kuchayadi */
-        .input-wrapper input:focus,
-        .input-wrapper textarea:focus {
-            border-bottom-color: #00ff66;
-            box-shadow: 0 4px 12px rgba(0, 255, 102, 0.05);
-        }
+.cancel{
+    background:rgba(255,255,255,0.05);
+    color:#cbd5e1;
+    border:1px solid rgba(255,255,255,0.08);
+}
 
-        /* ================= SUBMIT BUTTON ================= */
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            border: 1px solid #00ff66;
-            color: #00ff66;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            position: relative;
-        }
+.cancel:hover{
+    background:rgba(255,255,255,0.08);
+}
 
-        .submit-btn:hover {
-            background: #00ff66;
-            color: #050508;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
-        }
+/* SMALL INFO CARD */
+.hint{
+    font-size:11px;
+    color:#94a3b8;
+    margin-top:5px;
+}
 
-        .submit-btn:active {
-            transform: scale(0.99);
-        }
+a{
+    text-decoration:none;
+}
 
-        /* Orqaga qaytish havolasi */
-        .abort-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 11px;
-            color: rgba(255, 0, 85, 0.6); /* Rad etish qizil rangda */
-            text-decoration: none;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-
-        .abort-link:hover {
-            color: #ff0055;
-            text-shadow: 0 0 8px rgba(255, 0, 85, 0.4);
-        }
-    </style>
+</style>
 </head>
+
 <body>
 
-    <div class="terminal-glow"></div>
+<div class="wrapper">
 
-    <!-- TERMINAL OYNASI -->
-    <div class="terminal-window">
-        
-        <!-- Oyna paneli -->
-        <div class="terminal-header">
-            <div class="terminal-buttons">
-                <span class="dot dot-red"></span>
-                <span class="dot dot-yellow"></span>
-                <span class="dot dot-green"></span>
-            </div>
-            <div class="terminal-title">SYS://UPDATE_PROFILE.EXE</div>
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Update Profile</h1>
+        <p>Manage your personal information</p>
+    </div>
+
+    <!-- FORM -->
+    <form method="POST" class="form">
+        {% csrf_token %}
+
+        <div class="field">
+            <label>Bio</label>
+            {{ form.bio }}
+            <div class="hint">Write something about yourself</div>
         </div>
 
-        <!-- Oyna korpusi -->
-        <div class="terminal-body">
-            
-            <!-- Kompyuter yozuv effekti -->
-            <div class="typing-text">Connecting secure core... Ready.</div>
+        <div class="field">
+            <label>Website</label>
+            {{ form.website }}
+            <div class="hint">Your personal or portfolio link</div>
+        </div>
 
-            <form method="POST" id="coreForm">
-                {% csrf_token %}
+        <div class="actions">
 
-                <div class="input-group">
-                    <label>root@user/bio_data_</label>
-                    <div class="input-wrapper">
-                        {{ form.bio }}
-                    </div>
-                </div>
+            <button type="submit" class="btn save">
+                Save Changes
+            </button>
 
-                <div class="input-group">
-                    <label>root@user/web_url_</label>
-                    <div class="input-wrapper">
-                        {{ form.website }}
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn" id="subBtn">
-                    [ EXECUTE UPDATE ]
-                </button>
-            </form>
-
-            <a href="{% url 'user_list' %}" class="abort-link">
-                <!- ESC: ABORT_PROCESS ->
+            <a href="{% url 'user_list' %}" class="btn cancel" style="display:flex;justify-content:center;align-items:center;">
+                Cancel
             </a>
 
         </div>
-    </div>
 
-    <!-- JS: Tugma bosilganda yuklanish jarayonini imitatsiya qilish -->
-    <script>
-        document.getElementById("coreForm").addEventListener("submit", function() {
-            const btn = document.getElementById("subBtn");
-            btn.innerText = "[ SAVING TO CORE... ]";
-            btn.style.background = "rgba(0, 255, 102, 0.1)";
-            btn.style.pointerEvents = "none";
-        });
-    </script>
+    </form>
+
+</div>
 
 </body>
 </html>

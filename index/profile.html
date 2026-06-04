@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cyber Profile</title>
+<title>Cyber Post Profile</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -17,106 +17,45 @@
 
 body{
     min-height:100vh;
+    background:#0b1220;
     display:flex;
     justify-content:center;
-    align-items:center;
-    background:#030712;
-    overflow-x:hidden;
+    padding:40px 15px;
     font-family:'Poppins',sans-serif;
-    position:relative;
-    perspective: 1000px; /* 3D effekt yaxshi ishlashi uchun qo'shildi */
 }
 
-/* ===== ANIMATED BACKGROUND ===== */
-.bg{
-    position:absolute;
+/* FEED WRAPPER */
+.feed{
     width:100%;
-    height:100%;
+    max-width:600px;
+}
+
+/* POST CARD */
+.post{
+    background:rgba(17,24,39,0.8);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:18px;
+    margin-bottom:20px;
     overflow:hidden;
-    top: 0;
-    left: 0;
-    z-index: 1;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    backdrop-filter:blur(12px);
 }
 
-.bg span{
-    position:absolute;
-    display:block;
-    width:4px;
-    height:4px;
-    background:#00ffff;
-    border-radius:50%;
-    box-shadow:0 0 20px #00ffff;
-    animation:animate 10s linear infinite;
-}
-
-.bg span:nth-child(1){left:10%; animation-duration:7s; top:90%;}
-.bg span:nth-child(2){left:20%; animation-duration:11s; top:80%;}
-.bg span:nth-child(3){left:35%; animation-duration:6s; top:85%;}
-.bg span:nth-child(4){left:50%; animation-duration:9s; top:95%;}
-.bg span:nth-child(5){left:65%; animation-duration:13s; top:90%;}
-.bg span:nth-child(6){left:80%; animation-duration:8s; top:85%;}
-.bg span:nth-child(7){left:90%; animation-duration:12s; top:80%;}
-
-@keyframes animate{
-    0%{
-        transform:translateY(0) scale(1);
-        opacity:0;
-    }
-    50%{
-        opacity:1;
-    }
-    100%{
-        transform:translateY(-120vh) scale(2);
-        opacity:0;
-    }
-}
-
-/* ===== CARD ===== */
-.card{
-    width:450px;
-    padding:35px;
-    border-radius:30px;
-    background:rgba(15,23,42,0.75);
-    border:1px solid rgba(255,255,255,0.08);
-    backdrop-filter:blur(18px);
-    box-shadow:
-    0 0 20px rgba(0,255,255,0.2),
-    0 0 60px rgba(139,92,246,0.2);
-    position:relative;
-    z-index:5;
-    /* CSS transform-origin va silliq o'tish effekti */
-    transform-style: preserve-3d;
-    transition: transform 0.1s ease-out; 
-    animation: show 1s ease forwards;
-}
-
-@keyframes show{
-    from{
-        opacity:0;
-        transform:translateY(40px) scale(.8);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-/* ===== PROFILE ===== */
-.profile-top{
-    text-align:center;
+/* HEADER */
+.post-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 .avatar{
-    width:130px;
-    height:130px;
+    width:45px;
+    height:45px;
     border-radius:50%;
-    margin:auto;
     overflow:hidden;
-    border:4px solid #00ffff;
-    box-shadow:
-    0 0 25px #00ffff,
-    0 0 50px #00ffff;
-    animation:pulse 2s infinite;
+    border:2px solid #22d3ee;
 }
 
 .avatar img{
@@ -125,257 +64,164 @@ body{
     object-fit:cover;
 }
 
-@keyframes pulse{
-    50%{
-        transform:scale(1.05);
-        box-shadow:
-        0 0 40px #00ffff,
-        0 0 80px #8b5cf6;
-    }
+.user-info{
+    display:flex;
+    flex-direction:column;
 }
 
-.title{
-    margin-top:20px;
-    color:white;
-    font-size:32px;
-    font-family:'Orbitron',sans-serif;
-    letter-spacing:2px;
-}
-
-.sub{
-    color:#94a3b8;
-    margin-top:6px;
+.username{
+    color:#fff;
+    font-weight:600;
     font-size:14px;
 }
 
-/* ===== INFO BOX ===== */
-.info{
-    margin-top:30px;
+.time{
+    color:#94a3b8;
+    font-size:12px;
 }
 
-.box{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.05);
-    border-radius:18px;
+/* CONTENT */
+.post-body{
     padding:18px;
-    margin-bottom:18px;
-    transition:.4s;
-    position:relative;
-    overflow:hidden;
 }
 
-.box::before{
-    content:'';
-    position:absolute;
-    width:100%;
-    height:100%;
-    top:0;
-    left:-100%;
-    background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,0.08),
-        transparent
-    );
-    transition:.6s;
-}
-
-.box:hover::before{
-    left:100%;
-}
-
-.box:hover{
-    transform:translateY(-5px);
-    border-color:#00ffff;
-}
-
-.label{
-    color:#00ffff;
-    font-size:13px;
+.title{
+    font-size:18px;
+    color:#fff;
     margin-bottom:10px;
-    letter-spacing:1px;
     font-weight:600;
 }
 
-.value{
-    color:white;
-    line-height:1.7;
-    word-break:break-word;
+.text{
+    color:#cbd5e1;
+    font-size:14px;
+    line-height:1.6;
 }
 
-/* ===== BUTTONS ===== */
-.buttons{
+/* INFO BOX (BIO STYLE POST CONTENT) */
+.info-box{
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.05);
+    color:#e2e8f0;
+    font-size:14px;
+}
+
+/* ACTIONS */
+.post-actions{
     display:flex;
-    flex-direction:column;
-    gap:15px;
-    margin-top:25px;
+    gap:10px;
+    padding:12px 15px;
+    border-top:1px solid rgba(255,255,255,0.05);
 }
 
 .btn{
-    padding:15px;
-    border-radius:15px;
-    text-decoration:none;
-    color:white;
-    font-weight:600;
+    flex:1;
     text-align:center;
-    transition:.4s;
-    position:relative;
-    overflow:hidden;
-}
-
-.btn::after{
-    content:'';
-    position:absolute;
-    width:0;
-    height:100%;
-    background:rgba(255,255,255,0.15);
-    top:0;
-    left:0;
-    transition:.5s;
-}
-
-.btn:hover::after{
-    width:100%;
+    padding:10px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    color:white;
+    transition:.2s;
 }
 
 .btn:hover{
-    transform:translateY(-4px) scale(1.02);
+    transform:translateY(-2px);
+    filter:brightness(1.1);
 }
 
-.edit{
-    background:linear-gradient(135deg,#06b6d4,#3b82f6);
-}
+.edit{background:linear-gradient(135deg,#06b6d4,#3b82f6);}
+.update{background:linear-gradient(135deg,#8b5cf6,#ec4899);}
+.delete{background:linear-gradient(135deg,#ef4444,#dc2626);}
+.view{background:linear-gradient(135deg,#22c55e,#16a34a);}
 
-.update{
-    background:linear-gradient(135deg,#8b5cf6,#ec4899);
-}
-
-.delete{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-}
-
-.back{
-    background:#111827;
-    border:1px solid rgba(255,255,255,0.08);
-}
-
-/* ===== WEBSITE LINK ===== */
-.website-link{
+.website a{
     color:#38bdf8;
     text-decoration:none;
 }
 
-.website-link:hover{
+.website a:hover{
     text-decoration:underline;
 }
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:500px){
-    .card{
-        width:92%;
-        padding:25px;
+/* RESPONSIVE */
+@media(max-width:600px){
+    .post-actions{
+        flex-direction:column;
     }
 }
 </style>
 </head>
+
 <body>
 
-<div class="bg">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
+<div class="feed">
 
-<div class="card">
+    <!-- POST -->
+    <div class="post">
 
-    <div class="profile-top">
-        <div class="avatar">
-            {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" alt="avatar">
-            {% else %}
-                <img src="https://i.imgur.com/6VBx3io.png" alt="avatar">
-            {% endif %}
-        </div>
-
-        <div class="title">
-            CYBER PROFILE
-        </div>
-
-        <div class="sub">
-            Futuristic User Dashboard
-        </div>
-    </div>
-
-    <div class="info">
-        <div class="box">
-            <div class="label">
-                USER BIO
-            </div>
-            <div class="value">
-                {% if profile.bio %}
-                    {{ profile.bio }}
+        <!-- HEADER -->
+        <div class="post-header">
+            <div class="avatar">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}">
                 {% else %}
-                    No bio added...
+                    <img src="https://i.imgur.com/6VBx3io.png">
                 {% endif %}
             </div>
+
+            <div class="user-info">
+                <div class="username">{{ user.username }}</div>
+                <div class="time">Cyber user profile</div>
+            </div>
         </div>
 
-        <div class="box">
-            <div class="label">
-                WEBSITE
+        <!-- BODY -->
+        <div class="post-body">
+
+            <div class="title">Profile Bio</div>
+
+            <div class="text">
+                {{ profile.bio|default:"No bio added yet..." }}
             </div>
-            <div class="value">
+
+            <div class="info-box website">
+                <strong>Website:</strong><br>
                 {% if profile.website %}
-                    <a href="{{ profile.website }}" target="_blank" class="website-link">
+                    <a href="{{ profile.website }}" target="_blank">
                         {{ profile.website }}
                     </a>
                 {% else %}
-                    No website added...
+                    No website added
                 {% endif %}
             </div>
+
         </div>
-    </div>
 
-    <div class="buttons">
-        <a href="{% url 'profile_update' slug=profile.slug %}" class="btn edit">
-            ✏ Edit Profile
-        </a>
+        <!-- ACTIONS -->
+        <div class="post-actions">
 
-        <a href="{% url 'userprofile_update' slug=profile.slug %}" class="btn update">
-            ⚡ Update User Profile
-        </a>
+            <a href="{% url 'user_detail' slug=user.slug %}" class="btn view">
+                View
+            </a>
 
-        <a href="{% url 'profile_delete' slug=profile.slug %}" class="btn delete">
-            🗑 Delete Profile
-        </a>
+            <a href="{% url 'profile_update' slug=user.slug %}" class="btn update">
+                Edit
+            </a>
 
-        <a href="{% url 'user_list' %}" class="btn back">
-            ← Back To Users
-        </a>
+            <a href="{% url 'profile_delete' slug=user.slug %}" class="btn delete">
+                Delete
+            </a>
+
+        </div>
+
     </div>
 
 </div>
-
-<script>
-const card = document.querySelector('.card');
-
-document.addEventListener('mousemove', (e) => {
-    let x = (window.innerWidth / 2 - e.pageX) / 25;
-    let y = (window.innerHeight / 2 - e.pageY) / 25;
-
-    // Karta o'z joyidan qimirlab ketmasligi uchun dastlabki holat saqlab qolindi
-    card.style.transform = `scale(1) rotateY(${x}deg) rotateX(${-y}deg)`;
-});
-
-// Sichqoncha ekrandan chiqib ketganda karta yana tekis holatga qaytishi uchun:
-document.addEventListener('mouseleave', () => {
-    card.style.transform = `scale(1) rotateY(0deg) rotateX(0deg)`;
-});
-</script>
 
 </body>
 </html>
