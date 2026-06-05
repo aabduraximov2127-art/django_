@@ -15,6 +15,21 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(models.UserProfile)
 
 admin.site.register(models.Ritsep)
+class RegisterAdmin(admin.ModelAdmin):
+    list_display=('first_name','last_name','email','age','phon', 'password')
+    list_display_links=('email',)
+    search_fields=('first_name','last_name' )
+    list_filter=('email',)
+    list_per_page=15
+class RitsepAdmin(admin.ModelAdmin):
+    list_display=('title','author','craeted_at')
+    list_display_links=('title',)
+    search_fields=('title','content' )
+    readonly_fields=('slug',)
+    list_filter=('author',)
+    list_per_page=15
+
+
 class PostAdminn(admin.ModelAdmin):
     list_display=('title','author','craeted_at')
     list_display_links=('title',)

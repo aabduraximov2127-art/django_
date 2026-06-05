@@ -1,21 +1,14 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
-from django.contrib.auth import login as login
+from django.contrib.auth import login 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from unidecode import unidecode
 
-from .models import UserProfile, Ritsep
-from .forms import (
-    UserForm,
-    RegisterForm,
-    LoginForm,
-    UserProfileUpdateForm,
-    ProfileUpdateForm,
-    PostCreateForm,
-    PostUpdateForm,
-)
+from .models import UserProfile, Ritsep, Comment, Rating
+from .forms import UserForm,ProfileUpdateForm ,ProfileUpdateForm, PostCreateForm,PostUpdateForm,CommentForm,RatingForm,RegisterForm,LoginForm
+
 
 User = get_user_model()
 
@@ -36,49 +29,22 @@ def user_list(request):
 
     if query:
         q = normalize(query)
+        users = [user for user in users if q in normalize(user.first_name) or q in normalize(user.last_name)]
 
-        users = [
-            user for user in users
-            if q in normalize(user.first_name)
-            or q in normalize(user.last_name)
-        ]
-
-    return render(
-        request,
-        "index.html",
-        {
-            "users": users
-        }
-    )
+    return render(request,"index.html", {"users": users})
 
 
 def user_detail(request, slug):
-    user = get_object_or_404(
-        User,
-        slug=slug
-    )
+    user = get_object_or_404(User,slug=slug)
 
-    posts = Ritsep.objects.filter(
-        author=user
-    )
+    posts = Ritsep.objects.filter(author=user)
 
-    return render(
-        request,
-        "user_detail.html",
-        {
-            "user": user,
-            "posts": posts
-        }
-    )
+    return render(request,"user_detail.html",{"user": user,"posts": posts})
 
 
 def user_create(request):
     if request.method == "POST":
-
-        form = UserForm(
-            request.POST,
-            request.FILES
-        )
+        form = UserForm(request.POST, request.FILES)
 
         if form.is_valid():
             form.save()
@@ -87,49 +53,25 @@ def user_create(request):
     else:
         form = UserForm()
 
-    return render(
-        request,
-        "user_create.html",
-        {
-            "form": form
-        }
-    )
+    return render(request,"user_create.html",{"form": form})
 
 
 def user_update(request, slug):
 
-    user = get_object_or_404(
-        User,
-        slug=slug
-    )
+    user = get_object_or_404(User,slug=slug)
 
     if request.method == "POST":
 
-        form = UserForm(
-            request.POST,
-            request.FILES,
-            instance=user
-        )
+        form = UserForm(request.POST,request.FILES,instance=user)
 
         if form.is_valid():
             form.save()
-            return redirect(
-                "user_detail",
-                slug=user.slug
-            )
+            return redirect("user_detail",slug=user.slug)
 
     else:
-        form = UserForm(
-            instance=user
-        )
+        form = UserForm(instance=user)
 
-    return render(
-        request,
-        "user_update.html",
-        {
-            "form": form
-        }
-    )
+    return render(request,"user_update.html",{"form": form})
 
 
 def user_delete(request, slug):
@@ -195,7 +137,7 @@ def login_view(request):
                 user
             )
 
-            return redirect("user_list")
+            return redirect("post_list")
 
     else:
         form = LoginForm()
@@ -243,41 +185,41 @@ def profile(request, slug):
 
 
 @login_required
-def userprofile_update(request, slug):
+# def userprofile_update(request, slug):
 
-    profile = get_object_or_404(
-        UserProfile,
-        user__slug=slug
-    )
+#     profile = get_object_or_404(
+#         UserProfile,
+#         user__slug=slug
+#     )
 
-    if request.method == "POST":
+#     if request.method == "POST":
 
-        form = UserProfileUpdateForm(
-            request.POST,
-            instance=profile
-        )
+#         form = UserProfileUpdateForm(
+#             request.POST,
+#             instance=profile
+#         )
 
-        if form.is_valid():
-            form.save()
+#         if form.is_valid():
+#             form.save()
 
-            return redirect(
-                "profile",
-                slug=slug
-            )
+#             return redirect(
+#                 "profile",
+#                 slug=slug
+#             )
 
-    else:
+#     else:
 
-        form = UserProfileUpdateForm(
-            instance=profile
-        )
+#         form = UserProfileUpdateForm(
+#             instance=profile
+#         )
 
-    return render(
-        request,
-        "userprofile_update.html",
-        {
-            "form": form
-        }
-    )
+#     return render(
+#         request,
+#         "userprofile_update.html",
+#         {
+#             "form": form
+#         }
+#     )
 
 
 @login_required
@@ -469,3 +411,39 @@ def post_delete(request, slug):
             "post": post
         }
     )
+    
+def ritsep_detail(request, slug):
+    ritsep = Ritsep.objects.get(slug=slug)
+
+    if request.method == "POST":
+
+        if "comment_submit" in request.POST:
+            comment_form = CommentForm(request.POST)
+
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.user = request.user
+                comment.ritsep = ritsep
+                comment.save()
+
+        if "rating_submit" in request.POST:
+            stars = request.POST.get("stars")
+
+            Rating.objects.update_or_create(
+                user=request.user,
+                ritsep=ritsep,
+                defaults={
+                    "stars": stars
+                }
+            )
+
+    comment_form = CommentForm()
+    rating_form = RatingForm()
+
+    context = {
+        "ritsep": ritsep,
+        "comment_form": comment_form,
+        "rating_form": rating_form,
+    }
+
+    return render(request,"post_detail.html",context)

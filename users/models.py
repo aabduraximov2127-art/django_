@@ -142,6 +142,12 @@ class Ritsep(models.Model):
         default="Ritepni kiriting"
         
     )
+    
+    @property
+    def average_rating(self):
+        return self.ratings.aggregate(
+        Avg("stars")
+    )["stars__avg"] or 0
 
 
     images = models.ImageField(
@@ -185,3 +191,45 @@ class Ritsep(models.Model):
 
     def __str__(self):
         return self.ritsep
+    
+class Comment(models.Model):
+    ritsep = models.ForeignKey(
+        Ritsep,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+
+    user = models.ForeignKey(
+        ControlUsers,
+        on_delete=models.CASCADE
+    )
+
+    text = models.TextField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.user.email} - {self.ritsep.name}"
+
+
+class Rating(models.Model):
+    ritsep = models.ForeignKey(
+        Ritsep,
+        on_delete=models.CASCADE,
+        related_name="ratings"
+    )
+
+    user = models.ForeignKey(
+        ControlUsers,
+        on_delete=models.CASCADE
+    )
+
+    stars = models.PositiveSmallIntegerField()
+
+    class Meta:
+        unique_together = ("ritsep", "user")
+
+    def __str__(self):
+        return f"{self.ritsep.name} - {self.stars}"

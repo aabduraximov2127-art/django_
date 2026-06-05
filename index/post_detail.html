@@ -1,143 +1,111 @@
-{% block title %}{{ post.title }}{% endblock %}
 
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+{% block content %}
 
 <style>
-:root{
-    --bg:#070a12;
-    --card:rgba(255,255,255,.05);
-    --border:rgba(255,255,255,.08);
-    --text:#fff;
-    --muted:#9ca3af;
-    --primary:#f97316;
-    --green:#22c55e;
-    --red:#ef4444;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-    background: radial-gradient(circle at top,#1f2937,transparent 40%),
-                radial-gradient(circle at bottom,#7c2d12,transparent 40%),
-                var(--bg);
-    color:var(--text);
-    font-family:Outfit;
-}
-
-/* CONTAINER */
-.recipe-container{
-    max-width:900px;
-    margin:3rem auto;
-    padding:0 1rem;
-}
-
-/* TOPBAR */
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:2rem;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.back{
-    text-decoration:none;
-    color:var(--muted);
-    font-weight:600;
-    transition:.3s;
-}
-.back:hover{ color:var(--primary); }
-
-/* SMALL BUTTONS */
-.btn-small{
-    padding:8px 12px;
-    border-radius:10px;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:600;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.06);
+    background:#0f172a;
     color:#fff;
+    font-family:'Segoe UI',sans-serif;
+    opacity:0;
+    animation:pageLoad .7s ease forwards;
+}
+
+@keyframes pageLoad{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.container{
+    max-width:1000px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.back-btn{
+    display:inline-block;
+    padding:12px 20px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white;
+    background:#1e293b;
+    margin-bottom:20px;
     transition:.3s;
 }
 
-.btn-small:hover{
-    transform:translateY(-2px);
+.back-btn:hover{
+    background:#f97316;
+    transform:translateY(-3px);
 }
 
-.btn-small.edit:hover{
-    background:rgba(249,115,22,.2);
-    border-color:#f97316;
+.card{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(15px);
+    border-radius:25px;
+    overflow:hidden;
+    animation:showCard .8s ease;
 }
 
-.btn-small.delete:hover{
-    background:rgba(239,68,68,.2);
-    border-color:#ef4444;
+@keyframes showCard{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
-/* TITLE */
+.recipe-image img{
+    width:100%;
+    height:500px;
+    object-fit:cover;
+    display:block;
+}
+
+.content{
+    padding:30px;
+}
+
 .title{
     font-size:3rem;
-    font-weight:800;
-    margin:1rem 0;
-    font-family:"Playfair Display";
+    margin-bottom:15px;
 }
 
-/* META */
 .meta{
     display:flex;
-    gap:10px;
+    gap:15px;
     flex-wrap:wrap;
-    margin-bottom:1.5rem;
+    margin-bottom:25px;
 }
 
-.badge{
-    padding:6px 12px;
-    border-radius:999px;
-    background:rgba(255,255,255,.06);
-    border:1px solid var(--border);
-    font-size:13px;
-    color:var(--muted);
+.meta span{
+    background:#1e293b;
+    padding:8px 15px;
+    border-radius:30px;
 }
 
-/* IMAGE */
-.image-box{
-    border-radius:22px;
-    overflow:hidden;
-    margin-bottom:2rem;
-    border:1px solid var(--border);
-    cursor:zoom-in;
+.section{
+    margin-top:30px;
 }
-
-.image-box img{
-    width:100%;
-    height:420px;
-    object-fit:cover;
-    transition:.4s;
-}
-
-/* INFO GRID */
-.info-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-bottom:2rem;
-}
-
-.info-card{
-    background:var(--card);
-    padding:15px;
-    border-radius:16px;
-    border:1px solid var(--border);
-    text-align:center;
-}
-
-/* INGREDIENTS */
-.section{ margin-top:2rem; }
 
 .section h2{
-    margin-bottom:1rem;
-    font-size:1.4rem;
+    margin-bottom:15px;
+    color:#f97316;
 }
 
 .ingredients{
@@ -146,191 +114,256 @@ body{
     gap:10px;
 }
 
-.ing{
-    padding:8px 12px;
-    border-radius:999px;
-    background:rgba(249,115,22,.1);
-    border:1px solid rgba(249,115,22,.3);
-    color:#ffd6b0;
+.ingredients span{
+    background:#ea580c;
+    padding:10px 15px;
+    border-radius:30px;
 }
 
-/* STEPS */
-.steps{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
-
-.step{
-    background:var(--card);
-    border:1px solid var(--border);
+.comment{
+    background:#1e293b;
     padding:15px;
-    border-radius:16px;
+    border-radius:15px;
+    margin-top:10px;
+}
+
+form{
+    margin-top:15px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:12px;
+    background:#1e293b;
+    color:white;
+}
+
+button{
+    margin-top:15px;
+    border:none;
+    padding:12px 20px;
+    border-radius:12px;
+    background:#f97316;
+    color:white;
+    cursor:pointer;
     transition:.3s;
 }
 
-.step:hover{
-    transform:translateX(6px);
-    border-color:var(--primary);
+button:hover{
+    transform:translateY(-3px);
 }
 
-/* ACTIONS */
 .actions{
     display:flex;
     gap:10px;
-    margin-top:2rem;
-    flex-wrap:wrap;
+    margin-top:20px;
 }
 
-.btn{
-    padding:10px 14px;
+.action-btn{
+    flex:1;
+    text-align:center;
+    padding:14px;
     border-radius:12px;
-    border:none;
+    background:#1e293b;
     cursor:pointer;
-    background:rgba(255,255,255,.08);
-    color:#fff;
     transition:.3s;
 }
 
-.btn:hover{
-    background:var(--primary);
-    transform:translateY(-2px);
+.action-btn:hover{
+    background:#f97316;
 }
 
-/* RESPONSIVE */
 @media(max-width:768px){
-    .title{font-size:2rem;}
-    .info-grid{grid-template-columns:1fr;}
+
+    .title{
+        font-size:2rem;
+    }
+
+    .recipe-image img{
+        height:250px;
+    }
 }
 </style>
-{% endblock %}
 
-{% block content %}
+<div class="container">
 
-<div class="recipe-container">
+    <a href="{% url 'post_list' %}" class="back-btn">
+        🔙 Orqaga
+    </a>
+    <a href="{% url 'post_update' slug=post.slug %}" class="back-btn">
+        ✏️
+    </a>
+    <a href="{% url 'post_delete' slug=post.slug %}" class="back-btn">
+        🪣
+    </a>
 
-    <!-- TOP BAR -->
-    <div class="topbar">
+    <div class="card">
 
-        <a href="{% url 'post_list' %}" class="back">← Ro‘yxat</a>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a href="{% url 'post_update' post.slug %}" class="btn-small edit">✏️ Update</a>
-            <a href="{% url 'post_delete' post.slug %}" class="btn-small delete">🗑 Delete</a>
+        {% if post.images %}
+        <div class="recipe-image">
+            <img src="{{ post.images.url }}" alt="">
         </div>
+        {% endif %}
 
-    </div>
+        <div class="content">
 
-    <!-- TITLE -->
-    <h1 class="title">{{ post.title }}</h1>
+            <h1 class="title">{{ post.title }}</h1>
 
-    <!-- META -->
-    <div class="meta">
-        <div class="badge">👨‍🍳 {{ post.author }}</div>
-        <div class="badge">📅 {{ post.created_at|date:"d M Y" }}</div>
-        <div class="badge">⭐ 4.8</div>
-        <div class="badge">🔥 Oson</div>
-    </div>
+            <div class="meta">
+                <span>👨‍🍳 {{ post.author }}</span>
+                <span>📅 {{ post.created_at|date:"d.m.Y" }}</span>
+            </div>
 
-    <!-- IMAGE -->
-    {% if post.images %}
-    <div class="image-box">
-        <img src="{{ post.images.url }}">
-    </div>
-    {% endif %}
+            <div class="section">
+                <h2>Tavsif</h2>
+                {{ post.content|linebreaks }}
+            </div>
 
-    <!-- INFO -->
-    <div class="info-grid">
-        <div class="info-card">⏱ 30 min</div>
-        <div class="info-card">🔥 Oson</div>
-        <div class="info-card">🍽 2-3 kishi</div>
-    </div>
+            <div class="section">
+                <h2>Ingredientlar</h2>
 
-    <!-- DESCRIPTION -->
-    <div class="section">
-        <h2>📖 Tavsif</h2>
-        <p style="color:var(--muted)">
-            {{ post.content|linebreaks }}
-        </p>
-    </div>
+                <div class="ingredients">
+                    {% for item in post.ritsep.splitlines %}
+                        {% if item %}
+                        <span>{{ item }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
 
-    <!-- INGREDIENTS -->
-    <div class="section">
-        <h2>🥕 Ingredientlar</h2>
+            <div class="section">
+                <h2>Reyting</h2>
 
-        <div class="ingredients">
-            {% for item in post.ritsep.splitlines %}
-                {% if item %}
-                    <div class="ing">{{ item }}</div>
-                {% endif %}
-            {% endfor %}
+                <p>
+                    <p>{{ ritsep.average_rating|floatformat:1 }}/5 ⭐️</p>
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <select name="stars">
+                        <option value="1">1 ⭐</option>
+                        <option value="2">2 ⭐⭐</option>
+                        <option value="3">3 ⭐⭐⭐</option>
+                        <option value="4">4 ⭐⭐⭐⭐</option>
+                        <option value="5">5 ⭐⭐⭐⭐⭐</option>
+                    </select>
+
+                    <button type="submit" name="rating_submit">
+                        Baholash
+                    </button>
+                </form>
+            </div>
+
+<div class="section"> 
+    <h2>💬 Izoh yozish</h2>
+     <textarea id="commentInput" placeholder="Izohingizni yozing..." rows="5"> 
+     </textarea> <button id="sendComment"> Yuborish </button> 
+    <div id="commentsList"></div>
+ </div>
+
+            <div class="section">
+                <h2>Izohlar</h2>
+
+                {% for comment in post.comments.all %}
+
+                <div class="comment">
+                    <strong>{{ comment.user.first_name }}</strong>
+                    <p>{{ comment.text }}</p>
+                </div>
+
+                {% empty %}
+                    <p>Izohlar mavjud emas</p>
+                {% endfor %}
+            </div>
+
+            <div class="actions">
+                <div class="action-btn" id="likeBtn">
+                    ❤️ Like
+                </div>
+
+                <div class="action-btn" id="saveBtn">
+                    🔖 Save
+                </div>
+
+                <div class="action-btn" id="shareBtn">
+                    📤 Share
+                </div>
+            </div>
+
         </div>
-    </div>
-
-    <!-- STEPS -->
-    <div class="section">
-        <h2>👨‍🍳 Tayyorlash bosqichlari</h2>
-
-        <div class="steps">
-            <div class="step">1. Ingredientlarni tayyorlang</div>
-            <div class="step">2. Aralashtiring</div>
-            <div class="step">3. Pishiring</div>
-            <div class="step">4. Tayyor!</div>
-        </div>
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="actions">
-        <button class="btn" id="likeBtn">❤️ Like</button>
-        <button class="btn" id="saveBtn">🔖 Save</button>
-        <button class="btn" id="shareBtn">📤 Share</button>
     </div>
 
 </div>
 
 <script>
-// STEP ANIMATION
-document.querySelectorAll(".step").forEach((s,i)=>{
-    s.style.opacity="0";
-    s.style.transform="translateY(10px)";
 
-    setTimeout(()=>{
-        s.style.transition=".4s";
-        s.style.opacity="1";
-        s.style.transform="translateY(0)";
-    }, i*120);
+document.querySelectorAll("a").forEach(link=>{
+
+    if(link.href){
+
+        link.addEventListener("click",function(e){
+
+            if(
+                this.target !== "_blank" &&
+                !this.href.includes("#")
+            ){
+
+                e.preventDefault();
+
+                document.body.style.transition =
+                "all .4s ease";
+
+                document.body.style.opacity="0";
+
+                setTimeout(()=>{
+                    window.location=this.href;
+                },400);
+
+            }
+
+        });
+
+    }
+
 });
 
-// LIKE BUTTON
-const likeBtn = document.getElementById("likeBtn");
-likeBtn.addEventListener("click", ()=>{
-    likeBtn.innerHTML = "❤️ Liked";
-    likeBtn.style.background = "#ef4444";
-});
+const likeBtn =
+document.getElementById("likeBtn");
 
-// SHARE BUTTON
-const shareBtn = document.getElementById("shareBtn");
-shareBtn.addEventListener("click", async ()=>{
-    await navigator.clipboard.writeText(window.location.href);
-    shareBtn.innerHTML = "🔗 Copied!";
-    shareBtn.style.background = "#22c55e";
+likeBtn.onclick=()=>{
+    likeBtn.innerHTML="❤️ Liked";
+};
+
+const saveBtn =
+document.getElementById("saveBtn");
+
+saveBtn.onclick=()=>{
+    saveBtn.innerHTML="✅ Saved";
+};
+
+const shareBtn =
+document.getElementById("shareBtn");
+
+shareBtn.onclick=async()=>{
+
+    await navigator.clipboard.writeText(
+        window.location.href
+    );
+
+    shareBtn.innerHTML="🔗 Copied";
 
     setTimeout(()=>{
-        shareBtn.innerHTML = "📤 Share";
-        shareBtn.style.background = "";
+        shareBtn.innerHTML="📤 Share";
     },2000);
-});
 
-// IMAGE ZOOM
-const img = document.querySelector(".image-box img");
-if(img){
-    img.addEventListener("click", ()=>{
-        img.style.transform =
-            img.style.transform === "scale(1.5)"
-            ? "scale(1)"
-            : "scale(1.5)";
-    });
-}
+};
 </script>
 
 {% endblock %}
+```
