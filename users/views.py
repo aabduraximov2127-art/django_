@@ -352,6 +352,7 @@ def post_update(request, slug):
         Ritsep,
         slug=slug,
         author=request.user
+       
     )
 
     if request.method == "POST":

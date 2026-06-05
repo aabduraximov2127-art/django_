@@ -220,19 +220,19 @@ button:hover{
             </div>
 
             <div class="section">
-                <h2>Tavsif</h2>
-                {{ post.content|linebreaks }}
+                <h2>Name</h2>
+                <p><b><i>{{ post.name }}</i></b></p>
             </div>
 
             <div class="section">
                 <h2>Ingredientlar</h2>
 
                 <div class="ingredients">
-                    {% for item in post.ritsep.splitlines %}
+                    <b><i>{% for item in post.ritsep.splitlines %}
                         {% if item %}
                         <span>{{ item }}</span>
                         {% endif %}
-                    {% endfor %}
+                    {% endfor %}</i></b>
                 </div>
             </div>
 
