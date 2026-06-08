@@ -1,0 +1,17 @@
+
+
+{% block content %}
+
+<div class="container">
+    <h1>Profil</h1>
+
+    <div class="profile-card">
+        <h2>{{ request.user.username }}</h2>
+        <p><strong>Email:</strong> {{ request.user.email }}</p>
+        <p><strong>Ism:</strong> {{ request.user.first_name }}</p>
+        <p><strong>Familiya:</strong> {{ request.user.last_name }}</p>
+        <p><strong>Qo'shilgan sana:</strong> {{ request.user.date_joined }}</p>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
-from django.contrib.auth import login 
+from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from unidecode import unidecode
@@ -378,40 +378,22 @@ def post_update(request, slug):
             instance=post
         )
 
-    return render(
-        request,
-        "post_update.html",
-        {
-            "form": form,
-            "post": post
-        }
-    )
+    return render(request,"post_update.html",{"form": form,"post": post})
+
 
 
 @login_required
 def post_delete(request, slug):
 
-    post = get_object_or_404(
-        Ritsep,
-        slug=slug,
-        author=request.user
-    )
+    post = get_object_or_404(Ritsep,slug=slug,author=request)
 
     if request.method == "POST":
 
         post.delete()
 
-        return redirect(
-            "post_list"
-        )
+        return redirect("post_list")
 
-    return render(
-        request,
-        "post_delete.html",
-        {
-            "post": post
-        }
-    )
+    return render(request,"post_delete.html",{"post": post})
     
 def ritsep_detail(request, slug):
     ritsep = Ritsep.objects.get(slug=slug)
@@ -448,3 +430,7 @@ def ritsep_detail(request, slug):
     }
 
     return render(request,"post_detail.html",context)
+
+def profiles(request):
+    profiles = UserProfile.objects.all().order_by()
+    return render(request,"profiles.html",{"profiles": profiles})
