@@ -431,6 +431,3 @@ def ritsep_detail(request, slug):
 
     return render(request,"post_detail.html",context)
 
-def profiles(request):
-    profiles = UserProfile.objects.all().order_by()
-    return render(request,"profiles.html",{"profiles": profiles})
