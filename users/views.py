@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from unidecode import unidecode
+from . import models
 
 from .models import UserProfile, Ritsep, Comment, Rating
 from .forms import UserForm,ProfileUpdateForm ,ProfileUpdateForm, PostCreateForm,PostUpdateForm,CommentForm,RatingForm,RegisterForm,LoginForm
@@ -33,13 +34,10 @@ def user_list(request):
 
     return render(request,"index.html", {"users": users})
 
-
-def user_detail(request, slug):
-    user = get_object_or_404(User,slug=slug)
-
-    posts = Ritsep.objects.filter(author=user)
-
-    return render(request,"user_detail.html",{"user": user,"posts": posts})
+# @login_required
+def user_detail(request,slug):  
+    user=get_object_or_404(User,slug=slug)
+    return render(request,"user_detail.html", {"user": user})
 
 
 def user_create(request):
@@ -55,7 +53,7 @@ def user_create(request):
 
     return render(request,"user_create.html",{"form": form})
 
-
+@login_required
 def user_update(request, slug):
 
     user = get_object_or_404(User,slug=slug)
@@ -156,7 +154,7 @@ def logout_view(request):
     return redirect("home")
 
 
-@login_required
+# @login_required
 def profile(request, slug):
 
     user = get_object_or_404(
@@ -184,7 +182,7 @@ def profile(request, slug):
     )
 
 
-@login_required
+# @login_required
 # def userprofile_update(request, slug):
 
 #     profile = get_object_or_404(
