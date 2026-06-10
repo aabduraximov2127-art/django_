@@ -77,7 +77,7 @@ class ControlUsers(AbstractUser):
 
         if not self.slug:
             uid = str(uuid.uuid4())[:5]
-
+    
             self.slug = slugify(
                 f"{self.first_name}-{self.last_name}-{uid}"
             )
