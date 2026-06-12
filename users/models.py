@@ -119,7 +119,7 @@ def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
-class Ritsep(models.Model):
+class Post(models.Model):
 
     author = models.ForeignKey(
         ControlUsers,
@@ -194,7 +194,7 @@ class Ritsep(models.Model):
     
 class Comment(models.Model):
     ritsep = models.ForeignKey(
-        Ritsep,
+        Post,
         on_delete=models.CASCADE,
         related_name="comments"
     )
@@ -216,7 +216,7 @@ class Comment(models.Model):
 
 class Rating(models.Model):
     ritsep = models.ForeignKey(
-        Ritsep,
+        Post,
         on_delete=models.CASCADE,
         related_name="ratings"
     )

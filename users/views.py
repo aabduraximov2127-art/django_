@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from unidecode import unidecode
 from . import models
 
-from .models import UserProfile, Ritsep, Comment, Rating
+from .models import UserProfile, Post, Comment, Rating
 from .forms import UserForm,ProfileUpdateForm ,ProfileUpdateForm, PostCreateForm,PostUpdateForm,CommentForm,RatingForm,RegisterForm,LoginForm
 
 
@@ -282,7 +282,7 @@ def profile_delete(request, slug):
 
 def post_list(request):
 
-    posts = Ritsep.objects.all().order_by("-created_at")
+    posts = Post.objects.all().order_by("-created_at")
 
     return render(
         request,
@@ -296,7 +296,7 @@ def post_list(request):
 def post_detail(request, slug):
 
     post = get_object_or_404(
-        Ritsep,
+        Post,
         slug=slug
     )
 
@@ -328,9 +328,7 @@ def post_create(request):
             post.author = request.user
             post.save()
 
-            return redirect(
-                "post_list"
-            )
+            return redirect("post_list")
 
     else:
         form = PostCreateForm()
@@ -344,11 +342,11 @@ def post_create(request):
     )
 
 
-@login_required
+# @login_required
 def post_update(request, slug):
 
     post = get_object_or_404(
-        Ritsep,
+        Post,
         slug=slug,
         author=request.user
        
@@ -384,10 +382,10 @@ def post_update(request, slug):
 @login_required
 def post_delete(request, slug):
 
-    post = get_object_or_404(Ritsep,slug=slug,author=request)
+    post = get_object_or_404(Post,slug=slug)
 
     if request.method == "POST":
-
+        author=request.user
         post.delete()
 
         return redirect("post_list")
@@ -395,7 +393,7 @@ def post_delete(request, slug):
     return render(request,"post_delete.html",{"post": post})
     
 def ritsep_detail(request, slug):
-    ritsep = Ritsep.objects.get(slug=slug)
+    ritsep = Post.objects.get(slug=slug)
 
     if request.method == "POST":
 
@@ -411,22 +409,12 @@ def ritsep_detail(request, slug):
         if "rating_submit" in request.POST:
             stars = request.POST.get("stars")
 
-            Rating.objects.update_or_create(
-                user=request.user,
-                ritsep=ritsep,
-                defaults={
-                    "stars": stars
-                }
-            )
+            Rating.objects.update_or_create(user=request.user,ritsep=ritsep,defaults={"stars": stars})
 
     comment_form = CommentForm()
     rating_form = RatingForm()
 
-    context = {
-        "ritsep": ritsep,
-        "comment_form": comment_form,
-        "rating_form": rating_form,
-    }
+    context = {"ritsep": ritsep,"comment_form": comment_form,"rating_form": rating_form,}
 
     return render(request,"post_detail.html",context)
 

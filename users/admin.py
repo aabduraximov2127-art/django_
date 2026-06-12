@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(models.UserProfile)
 
-admin.site.register(models.Ritsep)
+admin.site.register(models.Post)
 class RegisterAdmin(admin.ModelAdmin):
     list_display=('first_name','last_name','email','age','phon', 'password')
     list_display_links=('email',)

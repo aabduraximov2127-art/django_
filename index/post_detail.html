@@ -198,7 +198,7 @@ button:hover{
     <a href="{% url 'post_update' slug=post.slug %}" class="back-btn">
         ✏️
     </a>
-    <a href="{% url 'post_delete' slug=post.slug %}" class="back-btn">
+    <a href="{% url 'post_delete' post.slug %}" class="back-btn">
         🪣
     </a>
 

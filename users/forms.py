@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 
-from .models import ControlUsers,UserProfile,Ritsep,Comment,Rating
+from .models import ControlUsers,UserProfile,Post,Comment,Rating
 
 
 class UserForm(forms.ModelForm):
@@ -101,7 +101,7 @@ class ProfileUpdateForm(forms.ModelForm):
 class PostCreateForm(forms.ModelForm):
 
     class Meta:
-        model = Ritsep
+        model = Post
 
         fields = [
             'name',
@@ -113,7 +113,7 @@ class PostCreateForm(forms.ModelForm):
 class PostUpdateForm(forms.ModelForm):
 
     class Meta:
-        model = Ritsep
+        model = Post
 
         fields = [
             'name',
