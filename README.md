@@ -77,6 +77,7 @@ GitHub: https://github.com/aabduraximov2127-art
 
 This project is licensed under the MIT License.
 pochta:aabduraximov765@gmail.com
-phon:+9989590391009
-tg:abduraximov_uz1
-tg:abduraximov_uz7
+phon:+998950391009
+phon:+998901251103
+telegram:abduraximov_uz1
+telegram:abduraximov_uz7

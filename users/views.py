@@ -1,9 +1,8 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model,login,logout
 
-from django.contrib.auth import login
-from django.contrib.auth import logout
+
 from django.contrib.auth.decorators import login_required
 from unidecode import unidecode
 from . import models
@@ -97,10 +96,7 @@ def register_view(request):
 
     if request.method == "POST":
 
-        form = RegisterForm(
-            request.POST,
-            request.FILES
-        )
+        form = RegisterForm(request.POST,request.FILES)
 
         if form.is_valid():
             form.save()
@@ -109,32 +105,20 @@ def register_view(request):
     else:
         form = RegisterForm()
 
-    return render(
-        request,
-        "register.html",
-        {
-            "form": form
-        }
-    )
+    return render(request,"register.html",{"form": form})
 
 
 def login_view(request):
 
     if request.method == "POST":
 
-        form = LoginForm(
-            request,
-            data=request.POST
-        )
+        form = LoginForm(request,data=request.POST)
 
         if form.is_valid():
 
             user = form.get_user()
 
-            login(
-                request,
-                user
-            )
+            login(request,user)
 
             return redirect("post_list")
 
