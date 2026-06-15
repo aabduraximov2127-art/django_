@@ -6,9 +6,10 @@ from django.contrib.auth import get_user_model,login,logout
 from django.contrib.auth.decorators import login_required
 from unidecode import unidecode
 from . import models
+from django.db.models import F,Q
 
-from .models import UserProfile, Post, Comment, Rating
-from .forms import UserForm,ProfileUpdateForm ,ProfileUpdateForm, PostCreateForm,PostUpdateForm,CommentForm,RatingForm,RegisterForm,LoginForm
+from .models import UserProfile, Post, Comment,Likes
+from .forms import UserForm,ProfileUpdateForm ,ProfileUpdateForm,RegisterForm,LoginForm,PostCreateForm,PostUpdateForm,CommentForm
 
 
 User = get_user_model()
@@ -152,7 +153,7 @@ def profile(request, slug):
         user=user
     )
 
-    posts = Ritsep.objects.filter(
+    posts = Post.objects.filter(
         author=user
     )
 
@@ -272,9 +273,7 @@ def post_list(request):
         request,
         "post_list.html",
         {
-            "posts": posts
-        }
-    )
+            "posts": posts})
 
 
 def post_detail(request, slug):
@@ -284,12 +283,33 @@ def post_detail(request, slug):
         slug=slug
     )
 
+    Post.objects.filter(slug=post.slug).update(view_count=F("view_count") + 1)
+
+    comments = post.comments.all()
+
+    comment_form = CommentForm()
+
+    user_liked = False
+
+    if request.user.is_authenticated:
+
+        user_liked = Likes.objects.filter(
+            user=request.user,
+            post=post
+        ).exists()
+
+    context = {
+        "post": post,
+        "comments": comments,
+        "comment_form": comment_form,
+        "user_liked": user_liked,
+        "likes_count": post.likes.count(),
+    }
+
     return render(
         request,
         "post_detail.html",
-        {
-            "post": post
-        }
+        context
     )
 
 
@@ -309,7 +329,7 @@ def post_create(request):
                 commit=False
             )
 
-            post.author = request.user
+            # post.author = request.user
             post.save()
 
             return redirect("post_list")
@@ -376,29 +396,41 @@ def post_delete(request, slug):
 
     return render(request,"post_delete.html",{"post": post})
     
-def ritsep_detail(request, slug):
-    ritsep = Post.objects.get(slug=slug)
 
-    if request.method == "POST":
+def search_posts(request):
+    query=request.GET.get('q','')
+    posts=Post.objects.all()
+    if query:
+        posts=posts.filter(
+        Q(title__icontains=query) | 
+        Q(content__icontains=query) | 
+        Q(author__frist_name__icontains=query) | 
+        Q(author__last_name__icontains=query)
+        ).distinct()
+    
+    context={'posts':posts, 'query': query}
+    return render(request, 'search_view.html',context)
 
-        if "comment_submit" in request.POST:
-            comment_form = CommentForm(request.POST)
+def like_toggle(request,slug):
+    post=get_object_or_404(Post,slug=slug)
+    like,created=Likes.objects.get_or_create(user=request.user, post=post)
+    
+    if not created:
+        like.delete()
+    return redirect('post_detail',slug=post.slug)
 
-            if comment_form.is_valid():
-                comment = comment_form.save(commit=False)
-                comment.user = request.user
-                comment.ritsep = ritsep
-                comment.save()
+@login_required
+def add_comment(requset,slug):
+    post=get_object_or_404(Post,slug=slug)
+    if requset.method=='POST':
+        form=CommentForm(requset.POST)
+        if form.is_valid():
+            comment=form.save(commit=False)
+            comment.post=post
+            comment.author=requset.user
+            comment.save()
+    return redirect('post_detail',slug=post.slug)
 
-        if "rating_submit" in request.POST:
-            stars = request.POST.get("stars")
 
-            Rating.objects.update_or_create(user=request.user,ritsep=ritsep,defaults={"stars": stars})
 
-    comment_form = CommentForm()
-    rating_form = RatingForm()
-
-    context = {"ritsep": ritsep,"comment_form": comment_form,"rating_form": rating_form,}
-
-    return render(request,"post_detail.html",context)
-
+    

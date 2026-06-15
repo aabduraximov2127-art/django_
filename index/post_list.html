@@ -1,7 +1,4 @@
-
-{% block title %}Retseptlar{% endblock %}
-
-{% block content %}
+<div class="stars"></div>
 
 <style>
 *{
@@ -12,11 +9,45 @@
 
 body{
     font-family:'Segoe UI',sans-serif;
-    background:#f8fafc;
+    background:#020617;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* STARS */
+.stars{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    overflow:hidden;
+}
+
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    box-shadow:0 0 10px white;
+    animation:fly linear infinite;
+}
+
+@keyframes fly{
+    from{
+        transform:translateY(100vh) translateX(0);
+        opacity:0;
+    }
+    20%{
+        opacity:1;
+    }
+    to{
+        transform:translateY(-150px) translateX(200px);
+        opacity:0;
+    }
 }
 
 .container{
-    max-width:1400px;
+    max-width:1500px;
     margin:auto;
     padding:40px 20px;
 }
@@ -26,55 +57,71 @@ body{
     justify-content:space-between;
     align-items:center;
     margin-bottom:40px;
+    flex-wrap:wrap;
+    gap:15px;
 }
 
 .page-title{
-    font-size:42px;
+    font-size:50px;
     font-weight:900;
-    color:#111827;
+    background:linear-gradient(
+        135deg,
+        #f97316,
+        #ef4444
+    );
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
 .recipe-count{
-    color:#6b7280;
-    margin-bottom:8px;
+    color:#94a3b8;
+    margin-bottom:10px;
 }
 
 .create-btn{
     text-decoration:none;
-    background:linear-gradient(135deg,#f97316,#ef4444);
+    background:linear-gradient(
+        135deg,
+        #dc2626,
+        #f97316
+    );
     color:white;
-    padding:15px 24px;
-    border-radius:16px;
+    padding:14px 24px;
+    border-radius:15px;
     font-weight:700;
     transition:.3s;
 }
 
 .create-btn:hover{
-    transform:translateY(-3px);
+    transform:translateY(-4px);
 }
 
 .recipes-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
-    gap:30px;
+    grid-template-columns:
+    repeat(auto-fill,minmax(340px,1fr));
+    gap:45px;
 }
 
 .recipe-card{
-    background:white;
-    border-radius:28px;
+    position:relative;
+    background:#0f172a;
+    border-radius:24px;
     overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-    transition:.4s;
+    border:1px solid rgba(255,255,255,.08);
+    transition:.5s;
+    transform-style:preserve-3d;
 }
 
 .recipe-card:hover{
-    transform:translateY(-10px);
-    box-shadow:0 20px 50px rgba(0,0,0,.15);
+    box-shadow:
+    0 0 30px rgba(249,115,22,.4),
+    0 0 70px rgba(239,68,68,.2);
 }
 
 .image-box{
     position:relative;
-    height:260px;
+    height:280px;
     overflow:hidden;
 }
 
@@ -82,20 +129,22 @@ body{
     width:100%;
     height:100%;
     object-fit:cover;
-    transition:.7s;
+    transition:1s;
+     
 }
 
 .recipe-card:hover img{
-    transform:scale(1.08);
+    transform:scale(1.12);
 }
 
 .overlay{
     position:absolute;
     inset:0;
-    background:linear-gradient(
+    background:
+    linear-gradient(
         to top,
-        rgba(0,0,0,.8),
-        transparent
+        rgba(0,0,0,.95),
+        rgba(0,0,0,.1)
     );
 }
 
@@ -103,7 +152,7 @@ body{
     position:absolute;
     top:15px;
     right:15px;
-    background:#f97316;
+    background:#ef4444;
     color:white;
     padding:8px 14px;
     border-radius:999px;
@@ -119,7 +168,7 @@ body{
     display:flex;
     align-items:center;
     gap:12px;
-    margin-bottom:18px;
+    margin-bottom:20px;
 }
 
 .avatar{
@@ -131,56 +180,51 @@ body{
         #f97316,
         #ef4444
     );
-    color:white;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-weight:800;
-    font-size:18px;
+    font-weight:900;
 }
 
 .name{
     font-weight:800;
-    color:#111827;
 }
 
 .date{
-    color:#6b7280;
+    color:#94a3b8;
     font-size:13px;
 }
 
 .category{
     color:#f97316;
-    font-size:11px;
+    font-size:12px;
     font-weight:800;
     letter-spacing:2px;
     margin-bottom:8px;
 }
 
 .title{
-    font-size:24px;
+    font-size:28px;
     font-weight:900;
-    color:#111827;
     margin-bottom:10px;
 }
 
 .desc{
-    color:#6b7280;
+    color:#cbd5e1;
     line-height:1.7;
-    margin-bottom:18px;
+    margin-bottom:20px;
 }
 
 .meta{
     display:flex;
-    flex-wrap:wrap;
     gap:10px;
+    flex-wrap:wrap;
     margin-bottom:20px;
 }
 
 .tag{
-    background:#fff7ed;
-    border:1px solid #fed7aa;
-    color:#ea580c;
+    background:rgba(255,255,255,.08);
+    color:#f97316;
     padding:8px 12px;
     border-radius:999px;
     font-size:12px;
@@ -198,8 +242,8 @@ body{
     color:white;
     background:linear-gradient(
         135deg,
-        #f97316,
-        #ef4444
+        #dc2626,
+        #f97316
     );
     padding:12px 18px;
     border-radius:14px;
@@ -216,15 +260,14 @@ body{
     height:42px;
     border:none;
     border-radius:50%;
-    background:#f3f4f6;
+    background:rgba(255,255,255,.08);
+    color:white;
     cursor:pointer;
-    font-size:16px;
     transition:.3s;
 }
 
 .btn:hover{
     background:#f97316;
-    color:white;
     transform:scale(1.1);
 }
 
@@ -233,29 +276,18 @@ body{
     padding:100px 20px;
 }
 
-.empty h2{
-    color:#111827;
-    margin-bottom:10px;
-}
-
-.empty p{
-    color:#6b7280;
-}
-
 @media(max-width:768px){
 
-    .page-header{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:15px;
-    }
-
     .page-title{
-        font-size:32px;
+        font-size:35px;
     }
 
     .recipes-grid{
         grid-template-columns:1fr;
+    }
+
+    .image-box{
+        height:400px;
     }
 }
 </style>
@@ -263,26 +295,28 @@ body{
 <div class="container">
 
     <div class="page-header">
+
         <div>
             <div class="recipe-count">
-                {{ posts.count }} ta retsept
+                {{ posts.count }} ta post
             </div>
 
             <h1 class="page-title">
-                🍲 Retseptlar Kolleksiyasi
+                🎬 Movie Collection
             </h1>
         </div>
 
-        <a href="{% url 'post_create' %}" class="create-btn">
-            + Yangi Retsept
-        </a>
-        <a href="{% url 'user_list' %}" class="create-btn">
-        Foydalanuvchilar Ro'yxati🤸‍♀️
-        </a>
-    
-    </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a href="{% url 'post_create' %}" class="create-btn">
+                + Yangi Post
+            </a>
 
-    {% if posts %}
+            <a href="{% url 'user_list' %}" class="create-btn">
+                Foydalanuvchilar
+            </a>
+        </div>
+
+    </div>
 
     <div class="recipes-grid">
 
@@ -293,15 +327,15 @@ body{
             <div class="image-box">
 
                 {% if post.images %}
-                    <img src="{{ post.images.url }}">
+                <img src="{{ post.images.url }}">
                 {% else %}
-                    <img src="https://picsum.photos/800/500?random={{ post.id }}">
+                <img src="https://picsum.photos/700/1000?random={{ post.id }}">
                 {% endif %}
 
                 <div class="overlay"></div>
 
                 <div class="badge">
-                    🍽 Retsept
+                    ⭐ IMDB 9.0
                 </div>
 
             </div>
@@ -328,7 +362,7 @@ body{
                 </div>
 
                 <div class="category">
-                    TOP RETSEPT
+                    MOVIE POST
                 </div>
 
                 <div class="title">
@@ -340,9 +374,9 @@ body{
                 </div>
 
                 <div class="meta">
-                    <span class="tag">⏱ 25 minut</span>
-                    <span class="tag">🔥 Oson</span>
-                    <span class="tag">⭐ 4.8</span>
+                    <span class="tag">🎬 Action</span>
+                    <span class="tag">🔥 Trending</span>
+                    <span class="tag">⭐ Premium</span>
                 </div>
 
                 <div class="footer">
@@ -355,7 +389,6 @@ body{
                     <div class="actions">
                         <button class="btn">❤️</button>
                         <button class="btn">🔖</button>
-                        
                     </div>
 
                 </div>
@@ -364,54 +397,77 @@ body{
 
         </div>
 
+        {% empty %}
+
+        <div class="empty">
+            <h2>Postlar topilmadi</h2>
+        </div>
+
         {% endfor %}
 
     </div>
 
-    {% else %}
-
-    <div class="empty">
-        <h2>🍲 Hozircha retsept yo'q</h2>
-        <p>Birinchi retseptni qo'shing</p>
-    </div>
-
-    {% endif %}
-
 </div>
 
 <script>
+
+/* STARS */
+
+const stars=document.querySelector('.stars');
+
+for(let i=0;i<250;i++){
+
+    const star=document.createElement('div');
+
+    star.classList.add('star');
+
+    star.style.left=Math.random()*100+'%';
+
+    star.style.animationDuration=
+    (Math.random()*8+3)+'s';
+
+    star.style.animationDelay=
+    Math.random()*5+'s';
+
+    stars.appendChild(star);
+}
+
+/* 3D CARD */
+
 document.querySelectorAll('.recipe-card').forEach(card=>{
 
-    card.addEventListener('mousemove',e=>{
+card.addEventListener('mousemove',e=>{
 
-        const rect=card.getBoundingClientRect();
+const rect=card.getBoundingClientRect();
 
-        const x=e.clientX-rect.left;
-        const y=e.clientY-rect.top;
+const x=e.clientX-rect.left;
+const y=e.clientY-rect.top;
 
-        const rotateY=((x/rect.width)-0.5)*10;
-        const rotateX=((y/rect.height)-0.5)*-10;
+const rotateY=((x/rect.width)-0.5)*18;
+const rotateX=((y/rect.height)-0.5)*-18;
 
-        card.style.transform=
-        `perspective(1000px)
-        rotateX(${rotateX}deg)
-        rotateY(${rotateY}deg)
-        translateY(-10px)`;
-
-    });
-
-    card.addEventListener('mouseleave',()=>{
-
-        card.style.transform=
-        `perspective(1000px)
-        rotateX(0)
-        rotateY(0)
-        translateY(0)`;
-
-    });
+card.style.transform=
+`
+perspective(1000px)
+rotateX(${rotateX}deg)
+rotateY(${rotateY}deg)
+scale(1.05)
+`;
 
 });
-</script>
 
-{% endblock %}
-```
+card.addEventListener('mouseleave',()=>{
+
+card.style.transform=
+`
+perspective(1000px)
+rotateX(0deg)
+rotateY(0deg)
+scale(1)
+`;
+
+});
+
+});
+
+</script>

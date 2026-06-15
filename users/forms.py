@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 
-from .models import ControlUsers,UserProfile,Post,Comment,Rating
+from .models import ControlUsers,UserProfile,Post,Comment
 
 
 class UserForm(forms.ModelForm):
@@ -104,8 +104,8 @@ class PostCreateForm(forms.ModelForm):
         model = Post
 
         fields = [
-            'name',
-            "ritsep",
+            'title',
+            "content",
             "images"
         ]
 
@@ -116,18 +116,15 @@ class PostUpdateForm(forms.ModelForm):
         model = Post
 
         fields = [
-            'name',
-            'ritsep',
+            'title',
+            'content',
             "images"
         ]
         
+
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = Comment
-        fields = ["text"]
-
-
-class RatingForm(forms.ModelForm):
-    class Meta:
-        model = Rating
-        fields = ["stars"]
+        model=Comment
+        fields=['content']
+        widgets={'content':forms.Textarea(attrs={'row':3,'placeholder':'Izoh Yozing...'})}
+        

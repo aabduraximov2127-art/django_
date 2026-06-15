@@ -120,116 +120,57 @@ def save_profile(sender, instance, **kwargs):
 
 
 class Post(models.Model):
+    author = models.ForeignKey(ControlUsers,on_delete=models.CASCADE,related_name="posts")
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    images = models.ImageField(upload_to="posts/",blank=True,null=True)
+    view_count = models.PositiveIntegerField(default=0)
+    likes_count = models.PositiveIntegerField(default=0)
+    slug = models.SlugField(unique=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    author = models.ForeignKey(
-        ControlUsers,
-        on_delete=models.CASCADE,
-        related_name="ritseps"
-    )
+class Meta:
+    ordering = ["-created_at"]
 
-    name = models.CharField(
-        max_length=200,
-        null=False,
-        blank=False,
-        default="Ritsep nomi"
-        
-    )
+def save(self, *args, **kwargs):
 
-    ritsep = models.CharField(
-        max_length=200,
-        null=False,
-        blank=False,
-        default="Ritepni kiriting"
-        
-    )
-    
-    @property
-    def average_rating(self):
-        return self.ratings.aggregate(
-        Avg("stars")
-    )["stars__avg"] or 0
-
-
-    images = models.ImageField(
-        upload_to="posts/",
-        blank=True,
-        null=True
-    )
-
-    slug = models.SlugField(
-        unique=True,
-        blank=True
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
-
-    class Meta:
-        ordering = ["-created_at"]
-
-    def save(self, *args, **kwargs):
-
-        if not self.slug:
-            self.slug = slugify(
-                f"{self.ritsep}-{str(uuid.uuid4())[:4]}"
-            )
-
-        super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse(
-            "post_detail",
-            kwargs={
-                "slug": self.slug
-            }
+    if not self.slug:
+        self.slug = slugify(
+            f"{self.title}-{str(uuid.uuid4())[:4]}"
         )
 
-    def __str__(self):
-        return self.ritsep
-    
+    super().save(*args, **kwargs)
+
+def __str__(self):
+    return self.title
+
+
+class Likes(models.Model):
+    user = models.ForeignKey(ControlUsers,on_delete=models.CASCADE,related_name="likes")
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name="likes")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Meta:
+    unique_together = ("user", "post")
+
+def __str__(self):
+    return f"{self.user.email} liked {self.post.title}"
+
+
 class Comment(models.Model):
-    ritsep = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
-        related_name="comments"
-    )
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name="comments")
+    author = models.ForeignKey(ControlUsers,on_delete=models.CASCADE,related_name="comments",null=True,blank=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    user = models.ForeignKey(
-        ControlUsers,
-        on_delete=models.CASCADE
-    )
+class Meta:
+    ordering = ["-created_at"]
 
-    text = models.TextField()
+def __str__(self):
 
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    if self.author:
+        return f"{self.author.email} - {self.post.title}"
 
-    def __str__(self):
-        return f"{self.user.email} - {self.ritsep.name}"
+    return self.post.title
 
-
-class Rating(models.Model):
-    ritsep = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
-        related_name="ratings"
-    )
-
-    user = models.ForeignKey(
-        ControlUsers,
-        on_delete=models.CASCADE
-    )
-
-    stars = models.PositiveSmallIntegerField()
-
-    class Meta:
-        unique_together = ("ritsep", "user")
-
-    def __str__(self):
-        return f"{self.ritsep.name} - {self.stars}"

@@ -38,3 +38,6 @@ class PostAdminn(admin.ModelAdmin):
     list_filter=('author',)
     list_per_page=15
     
+admin.site.register(models.Comment)
+admin.site.register(models.Likes)
+
