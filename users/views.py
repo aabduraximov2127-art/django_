@@ -276,7 +276,7 @@ def post_list(request):
             "posts": posts})
 
 
-def post_detail(request, slug):
+def post_detail(request,slug):
 
     post = get_object_or_404(
         Post,
@@ -324,12 +324,8 @@ def post_create(request):
         )
 
         if form.is_valid():
-
-            post = form.save(
-                commit=False
-            )
-
-            # post.author = request.user
+            post.author = request.user
+            post = form.save(commit=False)
             post.save()
 
             return redirect("post_list")
@@ -337,13 +333,7 @@ def post_create(request):
     else:
         form = PostCreateForm()
 
-    return render(
-        request,
-        "post_create.html",
-        {
-            "form": form
-        }
-    )
+    return render(request,"post_create.html",{"form": form})
 
 
 # @login_required
@@ -365,13 +355,8 @@ def post_update(request, slug):
         )
 
         if form.is_valid():
-
             form.save()
-
-            return redirect(
-                "post_detail",
-                slug=post.slug
-            )
+        return redirect("post_detail",slug=post.slug)
 
     else:
 
@@ -402,13 +387,11 @@ def search_posts(request):
     posts=Post.objects.all()
     if query:
         posts=posts.filter(
-        Q(title__icontains=query) | 
-        Q(content__icontains=query) | 
-        Q(author__frist_name__icontains=query) | 
-        Q(author__last_name__icontains=query)
-        ).distinct()
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) 
+           ).distinct()
     
-    context={'posts':posts, 'query': query}
+    context={'posts':posts, 'query': query, }
     return render(request, 'search_view.html',context)
 
 def like_toggle(request,slug):

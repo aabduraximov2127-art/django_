@@ -126,24 +126,23 @@ class Post(models.Model):
     images = models.ImageField(upload_to="posts/",blank=True,null=True)
     view_count = models.PositiveIntegerField(default=0)
     likes_count = models.PositiveIntegerField(default=0)
-    slug = models.SlugField(unique=True,blank=True)
+    slug = models.SlugField(unique=True,blank=True,null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Meta:
-    ordering = ["-created_at"]
+    class Meta:
+        ordering = ["-created_at"]
 
-def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(
+                f"{self.title}-{str(uuid.uuid4())[:4]}"
+            )
 
-    if not self.slug:
-        self.slug = slugify(
-            f"{self.title}-{str(uuid.uuid4())[:4]}"
-        )
+        super().save(*args, **kwargs)
 
-    super().save(*args, **kwargs)
-
-def __str__(self):
-    return self.title
+    def __str__(self):
+        return self.title
 
 
 class Likes(models.Model):
